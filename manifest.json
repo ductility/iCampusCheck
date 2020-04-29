@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+   
+    "name": "IcampusToDo",
+    "description": "find courses",
+    "version": "1.0",
+
+    "content_scripts": [
+      {
+        "matches": [
+          "*://canvas.skku.edu/*"
+        ],
+        "js": ["content.js", "jquery-3.5.0.min.js"]
+      }
+    ],
+   
+    "browser_action": {
+      "default_icon": "icon.png",
+      "default_popup": "popup.html"
+    },
+    "content_security_policy": "script-src 'self' https://canvas.skku.edu/; object-src 'self'",
+    "permissions": [
+      "activeTab", "tabs"
+    ]
+  }
