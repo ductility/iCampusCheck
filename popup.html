@@ -4,17 +4,57 @@
     <meta charset="utf-8">
     <script src="script.js"></script>
     <style>
+      table {
+        table-layout: fixed;
+        border-collapse: collapse;
+        text-align: left;
+        line-height: 1.5;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        margin: auto;
+        width: 580px;
+      }
+      table caption{
+        font-weight: bold;
+        font-size: 1.4em;
+      }
+      table .colum1 {
+        width: 130px;
+      }
+      table .colum3 {
+        width: 135px;
+      }
+      table .colum4 {
+        width: 50px;
+        text-align: center
+      }
+      table thead th {
+          padding: 10px;
+          font-weight: bold;
+          vertical-align: top;
+          text-align: center;
+          color: #fff;
+          background: #004483eb;
+          margin: 20px 10px;
+      }
+      table td {
+          padding:10px;
+          vertical-align: top;
+      }
+      table .even {
+        background: #0044830f;
+      }
       body{
         width:600px;
-        /* padding:1rem; */
       }
     </style>
   </head>
   <body>
-    <h1>IcampusToDo</h1>
+    <h1 style="text-align: center;">IcampusToDo</h1>
     <!-- <input type="button" value="btn01" id="btn01">
     <input type="button" value="btn02" id="btn02"> -->
     <div id="lecture"></div>
+    <p></p>
     <div id="assignment"></div>
   </body>
 </html>

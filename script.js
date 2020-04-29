@@ -75,19 +75,21 @@ function viewToDo(tingsToDo){
     var assignment = document.querySelector("#assignment");
     lecture.border = 1;
     assignment.border = 1;
-    var lecture_HTML = "<table><caption>강의</caption>" + add_HTMLTAG(tingsToDo.lecture);
-    var assignment_HTML = "<table><caption>과제</caption>" + add_HTMLTAG(tingsToDo.assignment);
+    var lecture_HTML = "<table class='lecture'><caption>강의</caption>" + add_HTMLTAG(tingsToDo.lecture);
+    var assignment_HTML = "<table class='assignment'><caption>과제</caption>" + add_HTMLTAG(tingsToDo.assignment);
     lecture.innerHTML = lecture_HTML;
     assignment.innerHTML = assignment_HTML;
 }
 
 //table에 삽입 할 내용
 function add_HTMLTAG(data){
-    var HTML_data = "<thead><tr><th>과목</th><th>강의명</th><th>마감기한</th><th>남은시간</th></tr></thead><tbody>";
+    var HTML_data = '<thead><tr><th class="colum1">과목</th><th class="colum2">강의명</th><th class="colum3">마감기한</th><th class="colum4">남은시간</th></tr></thead><tbody>';
     for(i=0; i<data.length; i++){
-        HTML_data = HTML_data + `<tr><td>${data[i].course}</td><td>${data[i].title}</td><td>${dateToLocaleString(data[i].due)}</td><td>${msToTime(data[i].remainingTime_ms)}</td></tr>`;
+        var row_class = ""
+        if(parseInt(i%2)==0)  row_class = ' class="even"'
+        HTML_data = HTML_data + `<tr${row_class}><td>${data[i].course}</td><td>${data[i].title}</td><td>${dateToLocaleString(data[i].due)}</td><td class="colum4">${msToTime(data[i].remainingTime_ms)}</td></tr>`;
     }
-    HTML_data = HTML_data + "</tbody></table>"
+    HTML_data = HTML_data + '</tbody></table>'
     return HTML_data;
 }
 
@@ -124,7 +126,7 @@ function msToTime(time_ms){
 
 //마감기한을 보기좋게 만들기
 function dateToLocaleString(date){
-    return addSpace(date.getMonth()+1)+"월 "+addSpace(date.getDate())+"일("+dayOfWeek(date)+")\t"+date.toLocaleTimeString().substring(0,date.toLocaleTimeString().length-3);
+    return addSpace(date.getMonth()+1)+"월 "+addSpace(date.getDate())+"일("+dayOfWeek(date)+") "+date.toLocaleTimeString().substring(0,date.toLocaleTimeString().length-3);
 }
 
 //요일찾기
