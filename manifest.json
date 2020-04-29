@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
    
-    "name": "IcampusToDo",
-    "description": "find courses",
-    "version": "1.0",
+    "name": "Icampus Check",
+    "description": "SKKU icampus, show a to do list",
+    "version": "0.0.1",
 
     "content_scripts": [
       {
