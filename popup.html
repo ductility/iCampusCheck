@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <script src="script.js"></script>
     <style>
+      @import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css);
       table {
         table-layout: fixed;
         border-collapse: collapse;
@@ -22,10 +23,10 @@
         width: 130px;
       }
       table .colum3 {
-        width: 135px;
+        width: 160px;
       }
       table .colum4 {
-        width: 50px;
+        width: 55px;
         text-align: center
       }
       table thead th {
@@ -45,7 +46,9 @@
         background: #0044830f;
       }
       body{
-        width:600px;
+        font-family: 'NanumSquare', sans-serif;
+        font-size: 0.9rem;
+        width: 600px;
       }
     </style>
   </head>
@@ -55,6 +58,6 @@
     <input type="button" value="btn02" id="btn02"> -->
     <div id="lecture"></div>
     <p></p>
-    <div id="assignment"></div>
+    <div id="assignment"><h2 style="font-weight: bold; padding: 10px">Loading...</h2><img src="loading.svg" style="padding: 9px;" alt=""></div>
   </body>
 </html>

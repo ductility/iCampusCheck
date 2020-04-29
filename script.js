@@ -143,9 +143,5 @@ function addSpace(num){
 
 //html DOM이 로드되면, 다음 함수 실행
 document.addEventListener('DOMContentLoaded',function(){
-    // var btn01 = document.querySelector('#btn01');
-    // var btn02 = document.querySelector('#btn02');
-//    btn01.addEventListener("click",getLearnStatus);
-//    btn02.addEventListener("click",button2);
     checkTokenAndRun();
 });
