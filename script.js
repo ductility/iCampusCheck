@@ -1,7 +1,8 @@
 //필요한 토큰이 발행되었는지 확인하고, (x)이면 새창열어 토큰 발행(로딩시간생각해서 반복)
 function checkTokenAndRun(){
+    //xn_api_token이 발행되지 않았다면, https://canvas.skku.edu/api/v1/courses에서 과목id를 가져와 새 창을 연다.
     chrome.tabs.executeScript({
-        code: 'var result=null;if(getCookie("xn_api_token")==null){result=document.querySelector(".ic-DashboardCard").dataset.reactid.split("$")[1]}result;'
+        code: 'var tempID=null;if(getCookie("xn_api_token")==null){var get_courses={"url":"https://canvas.skku.edu/api/v1/courses","method":"GET","timeout":0,"async":false,"dataType":"json"};$.ajax(get_courses).done(function(response){tempID=response[0].id})}tempID;'
     }, function (result) {
         if(result[0]!=null){
             var action_url = "https://canvas.skku.edu/courses/"+result[0]+"/external_tools/5";

@@ -45,7 +45,7 @@ var get_studentID = {
 $.ajax(get_studentID).done(function (response) {
     studentID = response.item.user_login;
 });
-console.log(studentID);
+// console.log(studentID);
 
 //과목별 강의출석, 과제 등 필요한 데이터 받기
 for(var i=0; i<course_Array.length; i++) {
@@ -66,7 +66,7 @@ for(var i=0; i<course_Array.length; i++) {
                 "name": course_Array[i].name,
                 "data": response.sections
             }
-            console.log(studyData.name);
+            // console.log(studyData.name);
             learnstatus_Array.push(studyData);
         }
     });

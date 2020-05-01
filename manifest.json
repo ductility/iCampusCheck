@@ -1,14 +1,15 @@
 {
     "manifest_version": 2,
    
-    "name": "Icampus Check",
-    "description": "SKKU icampus, show a to do list",
+    "name": "iCampus Check",
+    "description": "Show to-do list on SKKU iCampus",
     "version": "0.0.1",
 
     "content_scripts": [
       {
         "matches": [
-          "*://canvas.skku.edu/*"
+          "*://canvas.skku.edu/*",
+          "*://icampus.skku.edu/*"
         ],
         "js": ["content.js", "jquery-3.5.0.min.js"]
       }
