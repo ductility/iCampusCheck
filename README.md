@@ -19,7 +19,7 @@
 * 1일 미만 남으면 강조표시
 
 ## 참고 URL
-* Chrome Extension, Getting Started Tutorial
+* Chrome Extension, Getting Started Tutorial   
 https://developer.chrome.com/extensions/getstarted
 * 생활코딩, 웹페이지에서 공부한 단어의 수를 세기 (크롬 확장 기능 만들기)   
 https://opentutorials.org/module/2503/14051
