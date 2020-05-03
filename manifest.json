@@ -3,7 +3,7 @@
    
     "name": "iCampus Check",
     "description": "Show to-do list on SKKU iCampus",
-    "version": "0.0.1",
+    "version": "0.0.2",
 
     "content_scripts": [
       {

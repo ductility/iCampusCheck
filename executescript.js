@@ -16,19 +16,18 @@ var get_courses = {
     "dataType": "json"
 };
 $.ajax(get_courses).done(function (response) {
-    if(response[0].enrollments[0].user_id != null){
-        userID = response[0].enrollments[0].user_id;
-    }
-    else{
-        userID = response[1].enrollments[1].user_id;
-    }
     for(var i=0; i<response.length; i++) {
         var courseData = {
             "name":response[i].name,
             "id":response[i].id
         }
-        course_Array.push(courseData);
+        if(courseData.name != null){
+            userID = response[i].enrollments[0].user_id;
+            course_Array.push(courseData);
+            console.log(courseData);
+        }
     }
+    console.log(course_Array);
 });
 
 //학번 가져오기. 대시보드화면에서 학번이 나와있지 않아 특정 과목 안에있는 정보를 이용함.

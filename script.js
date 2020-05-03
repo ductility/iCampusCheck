@@ -2,10 +2,13 @@
 function checkTokenAndRun(){
     //xn_api_token이 발행되지 않았다면, https://canvas.skku.edu/api/v1/courses에서 과목id를 가져와 새 창을 연다.
     chrome.tabs.executeScript({
-        code: 'var tempID=null;if(getCookie("xn_api_token")==null){var get_courses={"url":"https://canvas.skku.edu/api/v1/courses","method":"GET","timeout":0,"async":false,"dataType":"json"};$.ajax(get_courses).done(function(response){tempID=response[0].id})}tempID;'
+        code: 'var tempCourses=null;if(getCookie("xn_api_token")==null){var get_courses={"url":"https://canvas.skku.edu/api/v1/courses","method":"GET","timeout":0,"async":false,"dataType":"json"};$.ajax(get_courses).done(function(response){tempCourses=response})}tempCourses;'
     }, function (result) {
         if(result[0]!=null){
-            var action_url = "https://canvas.skku.edu/courses/"+result[0]+"/external_tools/5";
+            console.log(result[0]);
+            var index = 0;
+            while(result[0][index].name==null) index = index + 1;
+            var action_url = "https://canvas.skku.edu/courses/"+result[0][index].id+"/external_tools/5";
             chrome.tabs.create({ url: action_url, active: false});
             var timerID = setInterval(function(){
                 chrome.tabs.executeScript({
