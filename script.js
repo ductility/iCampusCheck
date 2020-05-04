@@ -30,11 +30,12 @@ function getLearnStatus(){
         file: "/executescript.js",
         allFrames: true
     }, function (result) {
-        var learnstatus_Array = result[0];
-        // console.log(learnstatus_Array);
-        // console.log(findToDo(learnstatus_Array));
-        var tingsToDo = sortToDo(findToDo(learnstatus_Array));
-        viewToDo(tingsToDo);
+        if(result[0]!=null){
+            var learnstatus_Array = result[0];
+            var tingsToDo = sortToDo(findToDo(learnstatus_Array));
+            viewToDo(tingsToDo);
+        }
+        else alert("데이터를 가져오는데 실패했습니다. 재실행해 주세요!");
     });
 }
 
@@ -87,11 +88,11 @@ function viewToDo(tingsToDo){
 
 //table에 삽입 할 내용
 function add_HTMLTAG(data){
-    var HTML_data = '<thead><tr><th class="colum1">과목</th><th class="colum2">강의명</th><th class="colum3">마감기한</th><th class="colum4">남은시간</th></tr></thead><tbody>';
+    var HTML_data = '<thead><tr><th class="colum1">과목</th><th class="colum2">제목</th><th class="colum3">마감기한</th><th class="colum4">남은시간</th></tr></thead><tbody>';
     for(i=0; i<data.length; i++){
         var row_class = ""
         if(parseInt(i%2)==0)  row_class = ' class="even"'
-        HTML_data = HTML_data + `<tr${row_class}><td>${data[i].course}</td><td>${data[i].title}</td><td>${dateToLocaleString(data[i].due)}</td><td class="colum4">${msToTime(data[i].remainingTime_ms)}</td></tr>`;
+        HTML_data = HTML_data + `<tr${row_class}><td>${replaceUnderbar(data[i].course)}</td><td>${replaceUnderbar(data[i].title)}</td><td>${dateToLocaleString(data[i].due)}</td><td class="colum4">${msToTime(data[i].remainingTime_ms)}</td></tr>`;
     }
     HTML_data = HTML_data + '</tbody></table>'
     return HTML_data;
@@ -143,6 +144,11 @@ function dayOfWeek(date){
 function addSpace(num){
     if(num<10) return "&nbsp&nbsp"+num;
     else return num;
+}
+
+//영문자 사이에 언더바(_)가 있으면 자동 줄바꿈이 안됨. 언더바를 공백으로 바꾸자.
+function replaceUnderbar(str){
+    return str.replace(/_/g," ");
 }
 
 //html DOM이 로드되면, 다음 함수 실행

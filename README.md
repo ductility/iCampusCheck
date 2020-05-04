@@ -18,6 +18,10 @@
 * 들어야 할 강의를 클릭하면 그 강의로 이동
 * 1일 미만 남으면 강조표시
 
+## 버전별 추가 내용
+* **0.0.2** : 수강 철회한 과목 데이터 수집으로 인한 오류 해결
+* **0.0.3** : 과목, 강의/과제 제목에서 언더바(_)를 제거해서 자동 줄바꿈이 되게 함
+
 ## 참고 URL
 * Chrome Extension, Getting Started Tutorial   
 https://developer.chrome.com/extensions/getstarted
