@@ -38,7 +38,7 @@ $.ajax(get_courses).done(function (response) {
     console.log(course_Array);
 });
 
-//학번 가져오기. 대시보드화면에서 학번이 나와있지 않아 특정 과목 안에있는 정보를 이용함.
+//학번 가져오기. 대시보드화면에서 학번이 나와있지 않아 특정 과목 안에있는 정보를 이용함
 var get_studentID = {
     "url": "https://canvas.skku.edu/learningx/api/v1/courses/"+course_Array[0].id+"/total_learnstatus/users/"+userID,
     "method": "GET",
@@ -54,11 +54,7 @@ $.ajax(get_studentID).done(function (response) {
 });
 // console.log(studentID);
 
-//이거 고려해보기
-// "https://canvas.skku.edu/learningx/api/v1/courses/"+course_Array[i].id+"/allcomponents_db?user_id="+userID+"&user_login="+studentID+"&role=1"
-// "https://canvas.skku.edu/learningx/api/v1/courses/"+course_Array[i].id+"/sections/learnstatus_db?user_id="+userID+"&user_login="+studentID+"&role=1"
-
-//과목별 출석 매기는 자료 가져오기(주로 lecture)
+//과목별 강의/과제 목록 가져오기(출결/학습현황에서 가져옴)
 for(var i=0; i<course_Array.length; i++) {
     var targetURL = "https://canvas.skku.edu/learningx/api/v1/courses/"+course_Array[i].id+"/allcomponents_db?user_id="+userID+"&user_login="+studentID+"&role=1";
     var get_learnstatus = {
@@ -110,58 +106,7 @@ for(var i=0; i<learnstatus_Array.length; i++){
         }
     }
 }
-
-// //과목별 과제ID -> 과제title 객체만들기
-// var assignment_title_Array = [];
-// for(var i=0; i<learnstatus_Array.length; i++) {
-//     var get_assignment_data = {
-//         "url": "https://canvas.skku.edu/api/v1/courses/"+learnstatus_Array[i].course_id+"/assignment_groups?include%5B%5D=assignments&exclude_response_fields%5B%5D=description&exclude_response_fields%5B%5D=rubric&override_assignment_dates=true&per_page=50",
-//         "method": "GET",
-//         "timeout": 0,
-//         "async": false,
-//         "dataType": "json"
-//     };
-//     $.ajax(get_assignment_data).done(function (response) {
-//         var ID_TITLE = {};
-//         for(var j=0; j<response[0].assignments.length; j++) {
-//                 // var ID_TITLE = {};
-//                 ID_TITLE[response[0].assignments[j].id] = {"title":response[0].assignments[j].name, "url":response[0].assignments[j].html_url};
-//                 // temp_assignment_title=ID_TITLE;
-//             }
-//         if(ID_TITLE!=null) assignment_title_Array.push(ID_TITLE);
-//     });
-// }
-// console.log(assignment_title_Array);
-
-
-// //과제 제출여부 확인
-// for(var i=0; i<learnstatus_Array.length; i++) {
-//     var get_submissions = {
-//         "url": "https://canvas.skku.edu/api/v1/courses/"+learnstatus_Array[i].course_id+"/students/submissions?per_page=50",
-//         "method": "GET",
-//         "timeout": 0,
-//         "async": false,
-//         "dataType": "json"
-//     };
-//     $.ajax(get_submissions).done(function (response) {
-//         for(var j=0; j<response.length; j++) {
-//             var remainingTime = gapTime(now, response[j].cached_due_date);
-//             if(remainingTime > 0 && response[j].workflow_state == "unsubmitted"){
-//                 if(assignment_title_Array[i][response[j].assignment_id] != null){
-//                     console.log(assignment_title_Array[i][response[j].assignment_id]);
-//                     thingsToDo.assignment.push({
-//                         "course":learnstatus_Array[i].name,
-//                         "title":assignment_title_Array[i][response[j].assignment_id].title,
-//                         "remainingTime_ms":remainingTime,
-//                         "due":response[j].cached_due_date,
-//                         "url":assignment_title_Array[i][response[j].assignment_id].url                 
-//                     });
-//                 }
-//             }
-//         }
-//     });
-// }
-console.log(thingsToDo);
+//console.log(thingsToDo);
 
 //popup.html에 넘겨줄 변수
 thingsToDo;

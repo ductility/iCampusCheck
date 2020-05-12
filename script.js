@@ -1,3 +1,8 @@
+//html DOM이 로드된 후 실행
+document.addEventListener('DOMContentLoaded',function(){
+    checkTokenAndRun();
+});
+
 //필요한 토큰이 발행되었는지 확인하고, (x)이면 새창열어 토큰 발행(로딩시간생각해서 반복)
 function checkTokenAndRun(){
     //xn_api_token이 발행되지 않았다면, https://canvas.skku.edu/api/v1/courses에서 과목id를 가져와 새 창을 연다.
@@ -18,7 +23,7 @@ function checkTokenAndRun(){
                         getLearnStatus();
                         clearInterval(timerID);
                     }});
-            }, 500);
+            }, 500);//500ms 마다 재시도
         }
         else getLearnStatus();
     });
@@ -31,12 +36,9 @@ function getLearnStatus(){
         allFrames: true
     }, function (result) {
         if(result[0]!=null){
-            ///여기수정수정!!!!
-            // var learnstatus_Array = result[0];
-            // var thingsToDo = sortToDo(findToDo(learnstatus_Array));
             console.log(result[0]);
             var thingsToDo = sortToDo(result[0]);
-            ///여기수정수정
+            //콜백함수 사용, Table에 강의/과제 자료를 띄운 뒤 클릭하면 해당 url로 이동할 수 있게함
             viewToDo(thingsToDo, function(){
                 for(var i=0; i<thingsToDo.lecture.length; i++){
                     const id = "lecture"+i;
@@ -64,30 +66,6 @@ function moveToContent(action_url){
     chrome.tabs.create({ url: action_url, active: false});
 }
 
-//가져 온 데이터에서 필요한 것[(강의,과제)의 강의 명, 제목, 마감기한, 남은시간] 뽑아내기
-function findToDo(learnstatus_Array){
-    var thingsToDo = {"lecture":[], "assignment":[]};
-    var now = new Date();
-
-    for(var i=0; i<learnstatus_Array.length; i++){
-        for(var j=0; j<learnstatus_Array[i].data.length; j++){
-            var remainingTime = gapTime(now, learnstatus_Array[i].data[j].due_at);
-            if(remainingTime>0 && gapTime(now, learnstatus_Array[i].data[j].unlock_at)<0 && learnstatus_Array[i].data[j].use_attendance && learnstatus_Array[i].data[j].attendance_status != "attendance"){
-                console.log(gapTime(now, learnstatus_Array[i].data[j].unlock_at));
-                thingsToDo.lecture.push({
-                    "course":learnstatus_Array[i].name,
-                    "title":learnstatus_Array[i].data[j].title,
-                    "remainingTime_ms":remainingTime,
-                    "due":new Date(learnstatus_Array[i].data[j].due_at),               
-                    "url":learnstatus_Array[i].data[j].view_info.view_url});
-            }                
-        }
-    }
-
-    
-    return thingsToDo;
-}
-
 //html에 ToDoList 띄우기
 function viewToDo(thingsToDo, callback){
     var lecture = document.querySelector("#lecture");
@@ -95,7 +73,7 @@ function viewToDo(thingsToDo, callback){
     lecture.border = 1;
     assignment.border = 1;
     var lecture_HTML = "<table class='lecture'><caption>강의</caption>" + add_HTMLTAG(thingsToDo.lecture, "lecture");
-    var assignment_HTML = "<table class='assignment'><caption><span class='caption'><span class='tooltip'>과목 사이드바에 과제 및 평가가 있는 과목은 직접 확인해야합니다. ༼༎ຶ෴༎ຶ༽</span>과제<span class='badge'>1</span></span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
+    var assignment_HTML = "<table class='assignment'><caption><span class='caption'><span class='tooltip'>과목 사이드바에 '과제 및 평가'가 있는 과목은 직접 확인해야합니다. ༼༎ຶ෴༎ຶ༽</span>과제<span class='badge'>1</span></span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
     lecture.innerHTML = lecture_HTML;
     assignment.innerHTML = assignment_HTML;
 
@@ -168,8 +146,3 @@ function addSpace(num){
 function replaceUnderbar(str){
     return str.replace(/_/g," ");
 }
-
-//html DOM이 로드되면, 다음 함수 실행
-document.addEventListener('DOMContentLoaded',function(){
-    checkTokenAndRun();
-});
