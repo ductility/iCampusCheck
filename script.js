@@ -31,82 +31,99 @@ function getLearnStatus(){
         allFrames: true
     }, function (result) {
         if(result[0]!=null){
-            var learnstatus_Array = result[0];
-            var tingsToDo = sortToDo(findToDo(learnstatus_Array));
-            viewToDo(tingsToDo);
+            ///여기수정수정!!!!
+            // var learnstatus_Array = result[0];
+            // var thingsToDo = sortToDo(findToDo(learnstatus_Array));
+            console.log(result[0]);
+            var thingsToDo = sortToDo(result[0]);
+            ///여기수정수정
+            viewToDo(thingsToDo, function(){
+                for(var i=0; i<thingsToDo.lecture.length; i++){
+                    const id = "lecture"+i;
+                    const action_url = thingsToDo.lecture[i].url;
+                    document.getElementById(id).addEventListener('click', function(event){
+                        console.log(action_url);
+                        moveToContent(action_url);                        
+                    });
+                }
+                for(var i=0; i<thingsToDo.assignment.length; i++){
+                    const id = "assignment"+i;
+                    const action_url = thingsToDo.assignment[i].url;
+                    document.getElementById(id).addEventListener('click', function(event){
+                        moveToContent(action_url);
+                    });
+                }
+            });
         }
-        else alert("데이터를 가져오는데 실패했습니다. 재실행해 주세요!");
+        else document.querySelector("#assignment").innerHTML = "데이터를 불러오는데 실패했습니다. 새로고침 후 재실행 해주세요";
     });
+}
+
+//새창열기
+function moveToContent(action_url){
+    chrome.tabs.create({ url: action_url, active: false});
 }
 
 //가져 온 데이터에서 필요한 것[(강의,과제)의 강의 명, 제목, 마감기한, 남은시간] 뽑아내기
 function findToDo(learnstatus_Array){
-    var tingsToDo = {"lecture":[], "assignment":[]};
+    var thingsToDo = {"lecture":[], "assignment":[]};
     var now = new Date();
 
-    for(var a=0; a<learnstatus_Array.length; a++){
-        for(var b=0; b<learnstatus_Array[a].data.length; b++){
-            for(var c=0; c<learnstatus_Array[a].data[b].subsections.length; c++){
-                for(var d=0; d<learnstatus_Array[a].data[b].subsections[c].units.length; d++){
-                    for(var e=0; e<learnstatus_Array[a].data[b].subsections[c].units[d].components.length; e++){
-                        var remainingTime = gapTime(now, learnstatus_Array[a].data[b].subsections[c].units[d].components[e].due_at);
-                        if(remainingTime > 0){
-                            if(learnstatus_Array[a].data[b].subsections[c].units[d].components[e].use_attendance && learnstatus_Array[a].data[b].subsections[c].units[d].components[e].attendance_status != "attendance"){
-                                tingsToDo.lecture.push({
-                                    "course":learnstatus_Array[a].name,
-                                    "title":learnstatus_Array[a].data[b].subsections[c].units[d].components[e].title,
-                                    "remainingTime_ms":remainingTime,
-                                    "due":new Date(learnstatus_Array[a].data[b].subsections[c].units[d].components[e].due_at)});
-                            }
-                            if(learnstatus_Array[a].data[b].subsections[c].units[d].components[e].type == "assignment" && !(learnstatus_Array[a].data[b].subsections[c].units[d].components[e].completed)){
-                                tingsToDo.assignment.push({
-                                    "course":learnstatus_Array[a].name,
-                                    "title":learnstatus_Array[a].data[b].subsections[c].units[d].components[e].title,
-                                    "remainingTime_ms":remainingTime,
-                                    "due":new Date(learnstatus_Array[a].data[b].subsections[c].units[d].components[e].due_at)});
-                            }
-                        }
-                    }
-                }
-            }
+    for(var i=0; i<learnstatus_Array.length; i++){
+        for(var j=0; j<learnstatus_Array[i].data.length; j++){
+            var remainingTime = gapTime(now, learnstatus_Array[i].data[j].due_at);
+            if(remainingTime>0 && gapTime(now, learnstatus_Array[i].data[j].unlock_at)<0 && learnstatus_Array[i].data[j].use_attendance && learnstatus_Array[i].data[j].attendance_status != "attendance"){
+                console.log(gapTime(now, learnstatus_Array[i].data[j].unlock_at));
+                thingsToDo.lecture.push({
+                    "course":learnstatus_Array[i].name,
+                    "title":learnstatus_Array[i].data[j].title,
+                    "remainingTime_ms":remainingTime,
+                    "due":new Date(learnstatus_Array[i].data[j].due_at),               
+                    "url":learnstatus_Array[i].data[j].view_info.view_url});
+            }                
         }
     }
-    return tingsToDo;
+
+    
+    return thingsToDo;
 }
 
 //html에 ToDoList 띄우기
-function viewToDo(tingsToDo){
+function viewToDo(thingsToDo, callback){
     var lecture = document.querySelector("#lecture");
     var assignment = document.querySelector("#assignment");
     lecture.border = 1;
     assignment.border = 1;
-    var lecture_HTML = "<table class='lecture'><caption>강의</caption>" + add_HTMLTAG(tingsToDo.lecture);
-    var assignment_HTML = "<table class='assignment'><caption>과제</caption>" + add_HTMLTAG(tingsToDo.assignment);
+    var lecture_HTML = "<table class='lecture'><caption>강의</caption>" + add_HTMLTAG(thingsToDo.lecture, "lecture");
+    var assignment_HTML = "<table class='assignment'><caption><span class='caption'><span class='tooltip'>과목 사이드바에 과제 및 평가가 있는 과목은 직접 확인해야합니다. ༼༎ຶ෴༎ຶ༽</span>과제<span class='badge'>1</span></span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
     lecture.innerHTML = lecture_HTML;
     assignment.innerHTML = assignment_HTML;
+
+    callback();
 }
 
 //table에 삽입 할 내용
-function add_HTMLTAG(data){
+function add_HTMLTAG(data, type){
     var HTML_data = '<thead><tr><th class="colum1">과목</th><th class="colum2">제목</th><th class="colum3">마감기한</th><th class="colum4">남은시간</th></tr></thead><tbody>';
     for(i=0; i<data.length; i++){
+        var id = type+i;
         var row_class = ""
         if(parseInt(i%2)==0)  row_class = ' class="even"'
-        HTML_data = HTML_data + `<tr${row_class}><td>${replaceUnderbar(data[i].course)}</td><td>${replaceUnderbar(data[i].title)}</td><td>${dateToLocaleString(data[i].due)}</td><td class="colum4">${msToTime(data[i].remainingTime_ms)}</td></tr>`;
+        HTML_data = HTML_data + `<tr${row_class}><td>${replaceUnderbar(data[i].course)}</td><td class="title" id=${id}>${replaceUnderbar(data[i].title)}</td><td>${dateToLocaleString(data[i].due)}</td><td class="colum4">${msToTime(data[i].remainingTime_ms)}</td></tr>`;
     }
     HTML_data = HTML_data + '</tbody></table>'
     return HTML_data;
 }
 
 //적게남은 시간, 과목명, 과제명 순으로 정렬
-function sortToDo(tingsToDo){
-    tingsToDo.lecture.sort(function(a, b){
+function sortToDo(thingsToDo){
+    thingsToDo.lecture.sort(function(a, b){
         return a["remainingTime_ms"]-b["remainingTime_ms"];
     });
-    tingsToDo.assignment.sort(function(a, b){
+    thingsToDo.assignment.sort(function(a, b){
         return a["remainingTime_ms"]-b["remainingTime_ms"];
     });
-    return tingsToDo
+    return thingsToDo
 }
 
 //시간차 계산
@@ -131,7 +148,8 @@ function msToTime(time_ms){
 
 //마감기한을 보기좋게 만들기
 function dateToLocaleString(date){
-    return addSpace(date.getMonth()+1)+"월 "+addSpace(date.getDate())+"일("+dayOfWeek(date)+") "+date.toLocaleTimeString().substring(0,date.toLocaleTimeString().length-3);
+    newdate = new Date(date);
+    return addSpace(newdate.getMonth()+1)+"월 "+addSpace(newdate.getDate())+"일("+dayOfWeek(newdate)+") "+newdate.toLocaleTimeString().substring(0,newdate.toLocaleTimeString().length-3);
 }
 
 //요일찾기

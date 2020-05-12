@@ -17,6 +17,8 @@
       }
       table caption{
         font-weight: bold;
+        text-align: left;
+        margin-left: 270px;
         font-size: 1.4em;
       }
       table .colum1 {
@@ -45,6 +47,60 @@
       table .even {
         background: #0044830f;
       }
+      .title:hover {
+        cursor:pointer;
+        text-decoration: underline;
+      }
+      .caption{
+        position: relative;
+        display: inline-block;
+      }
+      .caption .tooltip {
+        visibility: hidden;
+        font-size: 1rem;
+        width: 245px;
+        background-color: #ffee58;
+        color: #2e2e2e;
+        text-align: left;
+        border-radius: 10px;
+        padding: 6px 15px;
+        position: absolute;
+        z-index: 1;
+        top: -237%;
+        left: 150%;
+        margin-left: -105px;
+      }
+      .caption .tooltip::after {
+        content: "";
+        position: absolute;
+        bottom: -33%;
+        left: 15%;
+        margin-left: -10px;
+        border-width: 10px;
+        border-style: solid;
+        border-color: #ffee58 transparent transparent;
+        }
+      .caption:hover .tooltip {
+        visibility: visible;
+      }
+      .badge {
+        font-size: .6875rem;
+        min-width: 18px;
+        line-height: 18px;
+        border-radius: 9px;
+        background: #ff6b5b;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 0 6px;
+        transition: all 0.2s;
+        position: relative;
+        top: -0.75rem;
+        right: 0.05rem;
+        z-index: 1;
+      }
       body{
         font-family: 'NanumSquare', sans-serif;
         font-size: 0.9rem;
@@ -54,8 +110,6 @@
   </head>
   <body>
     <h1 style="text-align: center;">아캠체크</h1>
-    <!-- <input type="button" value="btn01" id="btn01">
-    <input type="button" value="btn02" id="btn02"> -->
     <div id="lecture"></div>
     <p></p>
     <div id="assignment"><h2 style="font-weight: bold; padding: 10px">Loading...</h2><img src="loading.svg" style="padding: 9px;" alt=""></div>

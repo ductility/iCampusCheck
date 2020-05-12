@@ -25,6 +25,8 @@
 ## 참고 URL
 * Chrome Extension, Getting Started Tutorial   
 https://developer.chrome.com/extensions/getstarted
+* Chrome Extension, Page Action
+https://developer.chrome.com/extensions/pageAction
 * 생활코딩, 웹페이지에서 공부한 단어의 수를 세기 (크롬 확장 기능 만들기)   
 https://opentutorials.org/module/2503/14051
 * 유튜브 서기, 크롬확장프로그램 만들기 #1. 특정 사이트의 input값 변경하기   
