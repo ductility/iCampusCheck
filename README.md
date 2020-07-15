@@ -30,6 +30,10 @@
 강의/과제를 클릭하면 새 창에 강의/과제가 열림   
 '과제 및 평가' 항목이 있는 과목은 가져오지못함을 알리는 툴팁 추가
 
+* **0.1.1** 
+>도전학기 강의도 불러올 수 있게 변경   
+툴팁 삭제
+
 ## 참고 URL
 * Chrome Extension, Getting Started Tutorial   
 https://developer.chrome.com/extensions/getstarted
