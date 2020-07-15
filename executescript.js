@@ -26,7 +26,7 @@ var get_courses = {
 };
 $.ajax(get_courses).done(function (response) {
     for(var i=0; i<response.length; i++) {
-        if(response[i].apply_assignment_group_weights){
+        if(true){
             var courseData = {
                 "name":response[i].name,
                 "id":response[i].id

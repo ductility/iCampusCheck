@@ -73,7 +73,8 @@ function viewToDo(thingsToDo, callback){
     lecture.border = 1;
     assignment.border = 1;
     var lecture_HTML = "<table class='lecture'><caption>강의</caption>" + add_HTMLTAG(thingsToDo.lecture, "lecture");
-    var assignment_HTML = "<table class='assignment'><caption><span class='caption'><span class='tooltip'>과목 사이드바에 '과제 및 평가'가 있는 과목은 직접 확인해야합니다. ༼༎ຶ෴༎ຶ༽</span>과제<span class='badge'>1</span></span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
+    var assignment_HTML = "<table class='assignment'><caption><span class='caption'>과제</span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
+    // var assignment_HTML = "<table class='assignment'><caption><span class='caption'><span class='tooltip'>과목 사이드바에 '과제 및 평가'가 있는 과목은 직접 확인해야합니다. ༼༎ຶ෴༎ຶ༽</span>과제<span class='badge'>1</span></span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
     lecture.innerHTML = lecture_HTML;
     assignment.innerHTML = assignment_HTML;
 
