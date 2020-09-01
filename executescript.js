@@ -18,7 +18,7 @@ var authorizationToken = "Bearer " + getCookie("xn_api_token");
 
 //수강 과목들 가져오기
 var get_courses = {
-    "url": "https://canvas.skku.edu/api/v1/courses",
+    "url": "https://canvas.skku.edu/api/v1/users/self/favorites/courses",
     "method": "GET",
     "timeout": 0,
     "async": false,
