@@ -1,9 +1,9 @@
 //html DOM이 로드된 후 실행
 document.addEventListener('DOMContentLoaded',function(){
     // SIOR 전시회 홍보 그림에 링크
-    document.getElementById('poster').addEventListener('click', function(event){
-        moveToContent("http://sior.ddns.net/exhibition-2020/");                        
-    });
+    // document.getElementById('poster').addEventListener('click', function(event){
+    //     moveToContent("http://sior.ddns.net/exhibition-2020/");                        
+    // });
 
     checkTokenAndRun();
 });
