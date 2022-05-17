@@ -2,6 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
     <script src="script.js"></script>
     <style>
       @import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css);
@@ -106,12 +108,24 @@
         font-size: 0.9rem;
         width: 600px;
       }
+      #right{
+        float:right;
+        text-align:right;
+        font:50px;
+      }
+
+      
     </style>
   </head>
   <body>
-    <h1 style="text-align: center;">아캠체크</h1>
+    <h1 style="text-align: center;">아캠체크+</h1>
+    <button type="button" onclick = "location.href = 'options.html'"
+      id = "right" class="btn btn-outline-danger btn-lg">+</button>
+
     <div id="lecture"></div>
     <p></p>
     <div id="assignment"><h2 style="font-weight: bold; padding: 10px">Loading...</h2><img src="loading.svg" style="padding: 9px;" alt=""></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+   
   </body>
 </html>
