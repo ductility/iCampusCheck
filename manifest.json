@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
    
-    "name": "iCampus Check",
-    "description": "Show to-do list on SKKU iCampus",
+    "name": "iCampus Check Plus",
+    "description": "Upgraded version of iCampus Check",
     "version": "0.1.2",
 
     "content_scripts": [
