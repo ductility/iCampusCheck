@@ -93,7 +93,9 @@ function viewToDo(thingsToDo, callback){
 
     callback();
 }
-
+function openInNewTab(url) {
+    window.open(url, '_blank').focus();
+   }
 //table에 삽입 할 내용
 function add_HTMLTAG(data, type){
     var HTML_data = '<thead><tr><th class="colum1">과목</th><th class="colum2">제목</th><th class="colum3">마감기한</th><th class="colum4">남은시간</th></tr></thead><tbody>';
