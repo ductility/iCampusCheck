@@ -3,13 +3,17 @@ document.addEventListener('DOMContentLoaded',function(){
     checkTokenAndRun();
 });
 
+
+
 //필요한 토큰이 발행되었는지 확인하고, (x)이면 새창열어 토큰 발행(로딩시간생각해서 반복)
 function checkTokenAndRun(){
     //xn_api_token이 발행되지 않았다면, https://canvas.skku.edu/api/v1/courses에서 과목id를 가져와 새 창을 연다.
     chrome.tabs.executeScript({
         code: 'var tempCourses=null;if(getCookie("xn_api_token")==null){var get_courses={"url":"https://canvas.skku.edu/api/v1/courses","method":"GET","timeout":0,"async":false,"dataType":"json"};$.ajax(get_courses).done(function(response){tempCourses=response})}tempCourses;'
     }, function (result) {
+        console.log("토큰 검사 중...");
         if(result[0]!=null){
+            console.log("토큰을 가져옵니다...");
             console.log(result[0]);
             var index = 0;
             while(result[0][index].name==null) index = index + 1;
@@ -25,7 +29,12 @@ function checkTokenAndRun(){
                     }});
             }, 500);//500ms 마다 재시도
         }
-        else getLearnStatus();
+        else
+        {
+
+            console.log("학습 내용을 가져옵니다...");
+            getLearnStatus();
+        }
     });
 }
 
@@ -35,6 +44,7 @@ function getLearnStatus(){
         file: "/executescript.js",
         allFrames: true
     }, function (result) {
+        console.log(result);
         if(result[0]!=null){
             console.log(result[0]);
             var thingsToDo = sortToDo(result[0]);
@@ -70,13 +80,16 @@ function moveToContent(action_url){
 function viewToDo(thingsToDo, callback){
     var lecture = document.querySelector("#lecture");
     var assignment = document.querySelector("#assignment");
+    var zoom = document.querySelector("#zoom");
     lecture.border = 1;
     assignment.border = 1;
     var lecture_HTML = "<table class='lecture'><caption>강의</caption>" + add_HTMLTAG(thingsToDo.lecture, "lecture");
     var assignment_HTML = "<table class='assignment'><caption><span class='caption'>과제</span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
+    var zoom_HTML = "<table class='zoom'><caption><span class='caption'>실시간 강의</span></caption>" + add_HTMLTAG(thingsToDo.zoom, "zoom");
     // var assignment_HTML = "<table class='assignment'><caption><span class='caption'><span class='tooltip'>과목 사이드바에 '과제 및 평가'가 있는 과목은 직접 확인해야합니다. ༼༎ຶ෴༎ຶ༽</span>과제<span class='badge'>1</span></span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
     lecture.innerHTML = lecture_HTML;
     assignment.innerHTML = assignment_HTML;
+    zoom.innerHTML = zoom_HTML;
 
     callback();
 }
