@@ -1,6 +1,7 @@
 //전역변수 선언
 var toDoList = {"lecture":[], "assignment":[], "zoom":[]};
 var assignmentsList = {};
+var inappropriateAssignments = [];
 
 var now = new Date();
 
@@ -29,6 +30,7 @@ var getCourses = {
     "async": false,
     "dataType": "json"
 };
+
 $.ajax(getCourses).done(function (response) {
     for(var i=0; i<response.length; i++) {
         if(true){
@@ -123,6 +125,7 @@ for(let i=0; i<course_Array.length; i++) {
                         assignment.schedule_time = raw.schedule_time;
                         if (gapTime(now, raw.schedule_time) < 0) //이미 시작한 미팅
                         {
+                            inappropriateAssignments.push(raw.assignment_id);
                             continue;
                         }
                         assignment.duration = Number(raw.integration_data.duration_hour) * 3600 + Number(raw.integration_data.duration_minute) * 60;
@@ -135,6 +138,15 @@ for(let i=0; i<course_Array.length; i++) {
                     else if (raw.type === "text")
                     {
                         assignment.type = "text";
+                    }
+                    else
+                    {
+                        if (raw.submitted === true) //제출한 과제는 패스
+                        {
+                            inappropriateAssignments.push(raw.assignment_id);
+                            continue;
+                        }
+                        assignment.type = raw.type;
                     }
                     //여기서는 과제 끼리 중복이 없음.
                     assignmentsList[raw.assignment_id] = assignment;
@@ -172,7 +184,10 @@ for(let i=0; i<course_Array.length; i++) {
                 let raw = response[i];
                 if (!(raw.id in assignmentsList))
                 {
-
+                    if (inappropriateAssignments.includes(raw.id) === true)
+                    {
+                        continue;
+                    }
                     const timeLeftToUnlock = gapTime(now, raw.unlock_at); //과제가 오픈된건지 확인
                     let remainingTime = Number.MAX_SAFE_INTEGER;
                     if (raw.due_at !== undefined)
@@ -262,6 +277,15 @@ for(let i=0; i<assignments.length; i++) {
                 }
             } else if (current.type === "discussion") {
                 //일단 토론은 전부 표시
+                toDoList.assignment.push({
+                    "course": current.course_name,
+                    "title": current.title,
+                    "url": current.url,
+                    "due_at": current.due_at,
+                });
+            }
+            else //type이 assignment인 경우 대응.
+            {
                 toDoList.assignment.push({
                     "course": current.course_name,
                     "title": current.title,

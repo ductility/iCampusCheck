@@ -101,7 +101,7 @@ function add_HTMLTAG(data, type){
         var id = type+i;
         var row_class = ""
         if(parseInt(i%2)==0)  row_class = ' class="even"'
-        HTML_data = HTML_data + `<tr${row_class}><td>${replaceUnderbar(data[i].course)}</td><td class="title" id=${id}>${replaceUnderbar(data[i].title)}</td><td>${dateToLocaleString(data[i].due)}</td><td class="colum4">${msToTime(data[i].remainingTime_ms)}</td></tr>`;
+        HTML_data = HTML_data + `<tr${row_class}><td>${replaceUnderbar(data[i].course)}</td><td class="title" id="${id}">${replaceUnderbar(data[i].title)}</td><td>${dateToLocaleString(data[i].due)}</td><td class="colum4" style="color:${msToTime(data[i].remainingTime_ms)}">${msToTime(data[i].remainingTime_ms)}</td></tr>`;
     }
     HTML_data = HTML_data + '</tbody></table>'
     return HTML_data;
@@ -121,6 +121,21 @@ function sortToDo(thingsToDo){
 //시간차 계산
 function gapTime(now, date){
     return (new Date(date)).getTime() - now.getTime();
+}
+
+//글씨 빨갛게 표시 => 1일 이하 남음
+function timeLeftTextStyle(time_ms){
+    var time_out = "";
+    var minutes = parseInt((time_ms/(1000*60))%60);
+    var hours = parseInt((time_ms/(1000*60*60))%24);
+    var days = parseInt(time_ms/(1000*60*60*24));
+
+    if(days>0)
+        return "black";
+    else
+    {
+        return "red";
+    }
 }
 
 //남은시간을 보기좋게 만들기
