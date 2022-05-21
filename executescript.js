@@ -62,11 +62,11 @@ $.ajax(get_studentID).done(function (response) {
 });
 
 //과목별 강의/과제 목록 가져오기(강의콘텐츠에서 가져옴)
-for(let i=0; i<course_Array.length; i++) {
-    const targetURL = "https://canvas.skku.edu/learningx/api/v1/courses/"+course_Array[i].id+"/allcomponents_db?user_id="+userID+"&user_login="+studentID+"&role=1";
+for(var i=0; i<course_Array.length; i++) {
+    const lectureContentsURL = "https://canvas.skku.edu/learningx/api/v1/courses/"+course_Array[i].id+"/allcomponents_db?user_id="+userID+"&user_login="+studentID+"&role=1";
     //const targetURL = "https://canvas.skku.edu/api/v1/courses/"+course_Array[i].id+"/assignments?per_page=100"
-    const get_learnstatus = {
-        "url": targetURL,
+    const getFromLectureContents = {
+        "url": lectureContentsURL,
         "method": "GET",
         "timeout": 0,
         "headers": {
@@ -76,7 +76,7 @@ for(let i=0; i<course_Array.length; i++) {
         "dataType": "json",
         "async": false
     };
-    $.ajax(get_learnstatus).done(function (response) {
+    $.ajax(getFromLectureContents).done(function (response) {
         if(response.length>0){
             for (let j = 0; j < response.length; j++)
             {
@@ -157,7 +157,10 @@ for(let i=0; i<course_Array.length; i++) {
         }
 
         RequestCompleteCount++;
-    });
+    }).fail(function(a, b,c,d)
+    {
+        console.log(c);
+    });;
 }
 
 
@@ -165,23 +168,35 @@ for(let i=0; i<course_Array.length; i++) {
 
 //기존 아캠에서는 안보이는, 놓친 숙제가 있는지 확인.
 //과제 및 평가에서 가져옴
-for(let i=0; i<course_Array.length; i++) {
-    const targetURL = "https://canvas.skku.edu/api/v1/courses/"+course_Array[i].id+"/assignments?per_page=100"
-    const get_learnstatus = {
-        "url": targetURL,
+for(var i=0; i<course_Array.length; i++) {
+    const assignmentsURL = "https://canvas.skku.edu/api/v1/courses/"+course_Array[i].id+"/assignments?per_page=100"
+    const getFromAssignments = {
+        "url": assignmentsURL,
         "method": "GET",
         "timeout": 0,
         "headers": {
             "Accept": "*/*"
         },
-        "dataType": "json",
+        "dataType": "text",
         "async": false
     };
-    $.ajax(get_learnstatus).done(function (response) {
+    $.ajax(getFromAssignments).done(function (response) {
+        //이상한 문자열이 같이 앞에서 들어옴
+        //해당 이슈에 대해 대응
+        const strangeString = "while(1);";
+        if (response.substring(0, strangeString.length) === strangeString)
+        {
+            response = response.substring(strangeString.length);
+            response = JSON.parse(response);
+        }
+        else
+        {
+            response = JSON.parse(response);
+        }
         if(response.length>0){
-            for (let i = 0; i < response.length; i++)
+            for (let j = 0; j < response.length; j++)
             {
-                let raw = response[i];
+                let raw = response[j];
                 if (!(raw.id in assignmentsList))
                 {
                     if (inappropriateAssignments.includes(raw.id) === true)
@@ -199,10 +214,10 @@ for(let i=0; i<course_Array.length; i++) {
                     {
 
                         let assignment = {
-                            "course_name":course_Array[i].name,
+                            "course_name":course_Array[j].name,
                             "title":raw.name,
                             "source":"assignments",
-                            "course_id": course_Array[i].id,
+                            "course_id": course_Array[j].id,
 
                             "due_at":raw.due_at,
                             "unlock_at":raw.unlock_at,
@@ -225,6 +240,9 @@ for(let i=0; i<course_Array.length; i++) {
         }
         RequestCompleteCount++;
 
+    }).fail(function(a, b,c,d)
+    {
+        console.log(c);
     });
 }
 
