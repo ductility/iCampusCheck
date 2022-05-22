@@ -3,6 +3,7 @@
 <img src="https://raw.githubusercontent.com/ductility/iCampusCheck/master/icon.png">
 
 오픈소스실습 팀 프로젝트로 기존 아이캠퍼스 체크 플러스의 기능과 가시성을 향상시켰습니다.
+
 원본 : https://github.com/ductility/iCampusCheck
 
 ## 사용법
@@ -16,7 +17,7 @@
 * 새 창에 어떤 과목의 <출결/학습현황>목록이 뜨는 것은 api 사용을 위한 토큰 쿠키를 발행하기 위한 과정입니다. 오류가 아닙니다.
 
 ## 다음에 추가할 것
-*Option Page를 추가해 별도 tab에 내용 더 보기 좋게 기재하기
+* Option Page를 추가해 별도 tab에 내용 더 보기 좋게 기재하기
 
 ## 버전별 추가 내용
 * 1.0.0
