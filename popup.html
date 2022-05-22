@@ -179,6 +179,40 @@
         </details>
         </div>
       </div>
-
+      <style>
+        summary::marker {
+          content: "+ ";
+          font-family: monospace;
+        }
+      
+        details[open] summary::marker {
+          content: "- ";
+        }
+      
+        details {
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          padding: 0.5em 0.5em 0;
+          margin-bottom: 1em;
+        }
+      
+        summary {
+          font-weight: bold;
+          margin: -0.5em -0.5em 0 0;
+          padding: 0.5em;
+          cursor: pointer;
+        }
+      
+        details[open] {
+          padding: .5em;
+        }
+      
+        details[open] summary {
+          border-bottom: 1px solid rgb(23, 67, 84);
+          margin-bottom: 1.3em;
+          background-color: skyblue;
+          border-radius: 15px 15px 0 0;
+        }
+      </style>
   </body>
 </html>

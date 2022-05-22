@@ -47,3 +47,4 @@ https://stackoverflow.com/questions/34950009/chrome-extension-refused-to-load-th
 * popup창과 content script간에 통신 (ProgressBar 표시) https://bekusib.tistory.com/143
 * ProgressBar 표시
   https://codepen.io/alvarotrigo/pen/dyVYJmJ
+* details 과 summary 상세 정보 및 UI 디자인 https://blogpack.tistory.com/1026
