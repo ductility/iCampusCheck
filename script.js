@@ -217,11 +217,11 @@ function getLearnStatus(cookie){
                         }
                     });
                 }
-                else document.querySelector("#assignment").innerHTML = "데이터를 불러오는데 실패했습니다. 새로고침 후 재실행 해주세요";
+                else document.querySelector("#loadingMessage").innerHTML = "데이터를 불러오는데 실패했습니다. 새로고침 후 재실행 해주세요";
             });
         });
     } else {
-        document.querySelector("#assignment").innerHTML = "데이터를 불러오는데 실패했습니다. 새로고침 후 재실행 해주세요";
+        document.querySelector("#loadingMessage").innerHTML = "데이터를 불러오는데 실패했습니다. 새로고침 후 재실행 해주세요";
     }
 
 
