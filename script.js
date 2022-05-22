@@ -105,11 +105,11 @@ function getLearnStatus(cookie){
 
             result = result[0].result;
             console.log("과목 정보 가져옴!");
-            if(result !== null){
-                var thingsToDo = sortToDo(result);
+            if(result !== null) {
+                let thingsToDo = sortToDo(result);
                 //콜백함수 사용, Table에 강의/과제 자료를 띄운 뒤 클릭하면 해당 url로 이동할 수 있게함
                 viewToDo(thingsToDo, function(){
-                    for(var i=0; i<thingsToDo.lecture.length; i++){
+                    for(let i=0; i<thingsToDo.lecture.length; i++){
                         const id = "lecture"+i;
                         const action_url = thingsToDo.lecture[i].url;
                         document.getElementById(id).addEventListener('click', function(event){
@@ -117,9 +117,16 @@ function getLearnStatus(cookie){
                             moveToContent(action_url);
                         });
                     }
-                    for(var i=0; i<thingsToDo.assignment.length; i++){
+                    for(let i=0; i<thingsToDo.assignment.length; i++){
                         const id = "assignment"+i;
                         const action_url = thingsToDo.assignment[i].url;
+                        document.getElementById(id).addEventListener('click', function(event){
+                            moveToContent(action_url);
+                        });
+                    }
+                    for(let i=0; i<thingsToDo.zoom.length; i++){
+                        const id = "zoom"+i;
+                        const action_url = thingsToDo.zoom[i].url;
                         document.getElementById(id).addEventListener('click', function(event){
                             moveToContent(action_url);
                         });
@@ -144,6 +151,7 @@ function viewToDo(thingsToDo, callback){
     var zoom = document.querySelector("#zoom");
     lecture.border = 1;
     assignment.border = 1;
+    zoom.border = 1;
     var lecture_HTML = "<table class='lecture'><caption>강의</caption>" + add_HTMLTAG(thingsToDo.lecture, "lecture");
     var assignment_HTML = "<table class='assignment'><caption><span class='caption'>과제</span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
     var zoom_HTML = "<table class='zoom'><caption><span class='caption'>실시간 강의</span></caption>" + add_HTMLTAG(thingsToDo.zoom, "zoom");
@@ -159,7 +167,7 @@ function openInNewTab(url) {
    }
 //table에 삽입 할 내용
 function add_HTMLTAG(data, type){
-    var HTML_data = '<thead><tr><th class="colum1">과목</th><th class="colum2">제목</th><th class="colum3">마감기한</th><th class="colum4">남은시간</th></tr></thead><tbody>';
+    var HTML_data = '<thead><tr><th class="colum1">과목</th><th class="colum2">제목</th><th class="colum3">' + (type === "zoom" ? '시작시간' : '마감시간') + '</th><th class="colum4">남은시간</th></tr></thead><tbody>';
     for(i=0; i<data.length; i++){
         var id = type+i;
         var row_class = ""
