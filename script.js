@@ -510,6 +510,11 @@ function getComponents()
                         }
                         else if (raw.type === "discussion")
                         {
+                            if (raw.submitted === true) //제출한 과제는 패스
+                            {
+                                inappropriateAssignments.push(raw.assignment_id);
+                                continue;
+                            }
                             assignment.type = "discussion";
                         }
                         else if (raw.type === "text")
