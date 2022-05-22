@@ -10,7 +10,7 @@
         "matches": [
           "*://canvas.skku.edu/*"
         ],
-        "js": ["includes/jquery-3.5.0.min.js","content.js", "script.js", "executescript.js"]
+        "js": ["includes/jquery-3.5.0.min.js","content.js", "script.js"]
       }
     ],
 
