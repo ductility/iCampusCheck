@@ -247,6 +247,13 @@ function viewToDo(thingsToDo, callback){
     lecture.innerHTML = lecture_HTML;
     assignment.innerHTML = assignment_HTML;
     zoom.innerHTML = zoom_HTML;
+    let lectureSpanObject = document.querySelector("#lectureCount");
+    lectureSpanObject.innerText = String(thingsToDo.lecture.length);
+    let zoomSpanObject = document.querySelector("#zoomCount");
+    zoomSpanObject.innerText = String(thingsToDo.zoom.length);
+    let assignmentSpanObject = document.querySelector("#assignmentCount");
+    assignmentSpanObject.innerText = String(thingsToDo.assignment.length);
+
     document.getElementById('lectureDetail').style.display = 'block';
     document.getElementById('zoomDetail').style.display = 'block';
     document.getElementById('assignmentDetail').style.display = 'block';
