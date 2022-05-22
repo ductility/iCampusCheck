@@ -2,9 +2,22 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link href="includes/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="includes/bootstrap-icons.scss">
+    <script src="includes/jquery-3.5.0.min.js"></script>
     <script src="script.js"></script>
     <style>
-      @import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css);
+      @font-face {
+        font-family: "HancomMalangMalang";
+        src: 
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Bold.otf') format('opentype'),
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Bold.ttf') format('truetype'),
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Bold.otf') format('opentype'),
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Bold.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+     /* @import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css); */
       table {
         table-layout: fixed;
         border-collapse: collapse;
@@ -106,12 +119,13 @@
         font-size: 0.9rem;
         width: 600px;
       }
+      h1{
+        font-family : HancomMalangMalang;
+      }
     </style>
   </head>
   <body>
-    <h1 style="text-align: center;">아캠체크 Plus</h1>
-    <label><input type="checkbox" name="sortop" id="sortByTime" onchange="handleChange(this);" checked> 시간순 정렬</label>
-    <label><input type="radio" name="sortop" id="sortByCourse" onchange="handleChange(this);"> 과목별 정렬</label>
+    <h1 style="text-align: center;">아캠체크 플러스</h1>
     <div id="lecture"></div>
     <p></p>
     <div id="zoom"></div>
