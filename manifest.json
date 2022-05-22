@@ -3,7 +3,7 @@
    
     "name": "iCampus Check Plus",
     "description": "Upgraded version of iCampus Check",
-    "version": "0.1.2",
+    "version": "1.0.0",
 
     "content_scripts": [
       {
