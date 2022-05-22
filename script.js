@@ -159,7 +159,10 @@ function viewToDo(thingsToDo, callback){
     lecture.innerHTML = lecture_HTML;
     assignment.innerHTML = assignment_HTML;
     zoom.innerHTML = zoom_HTML;
-
+    document.getElementById('lectureDetail').style.display = 'block';
+    document.getElementById('zoomDetail').style.display = 'block';
+    document.getElementById('assignmentDetail').style.display = 'block';
+    deleteLoadingBar();
     callback();
 }
 function openInNewTab(url) {
@@ -177,7 +180,22 @@ function add_HTMLTAG(data, type){
     HTML_data = HTML_data + '</tbody></table>'
     return HTML_data;
 }
+//loadingbar 지우기
+function deleteLoadingBar() {
+    const div = document.getElementById('loadingBar');
 
+    div.remove();
+} 
+
+function toggleDiv() {
+    const div = document.getElementById('my_div');
+
+    if (div.style.display === 'none') {
+        div.style.display = 'block';
+    } else {
+        div.style.display = 'none';
+    }
+} 
 //적게남은 시간, 과목명, 과제명 순으로 정렬
 function sortToDo(thingsToDo){
     thingsToDo.lecture.sort(function(a, b){
@@ -190,6 +208,33 @@ function sortToDo(thingsToDo){
         return a["start_time"]-b["start_time"];
     });
     return thingsToDo;
+}
+function handleChange(src) {
+    //checkTokenAndRun()
+}
+
+//적게남은 시간, 과목명, 과제명 순으로 정렬
+function sortWithTime(thingsToDo) {
+    thingsToDo.lecture.sort(function (a, b) {
+        return a["remainingTime_ms"] - b["remainingTime_ms"];
+
+    });
+    thingsToDo.assignment.sort(function (a, b) {
+        return a["remainingTime_ms"] - b["remainingTime_ms"];
+    });
+    return thingsToDo
+}
+
+//과목 별 정렬
+function sortWithCourse(thingsToDo) {
+    thingsToDo.lecture.sort(function (a, b) {
+        return a["course"] - b["course"];
+
+    });
+    thingsToDo.assignment.sort(function (a, b) {
+        return a["course"] - b["course"];
+    });
+    return thingsToDo
 }
 
 //시간차 계산
