@@ -1,7 +1,30 @@
 //html DOM이 로드된 후 실행
 document.addEventListener('DOMContentLoaded',function(){
     checkTokenAndRun();
+
 });
+
+chrome.runtime.onMessage.addListener(
+    (request, sender, sendResponse) => {
+        console.log('메시지 받음');
+        request = request.percent;
+        updatePercent(request[0], request[1]);
+        sendResponse({ msg:"메시지 잘 받았으니 돌려드림" });
+
+    });
+
+//퍼센트 업데이트
+function updatePercent(completedTasks, totalTasks)
+{
+    let spanObject = document.querySelector("#loading_percent");
+    if (spanObject !== null)
+    {
+        let percent = Math.round(completedTasks / totalTasks * 100);
+        spanObject.innerHTML = String(percent);
+        console.log(percent);
+    }
+}
+
 
 var getCookie = function(name) {
     var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
@@ -46,6 +69,28 @@ function checkToken()
 //필요한 토큰이 발행되었는지 확인하고, (x)이면 새창열어 토큰 발행(로딩시간생각해서 반복)
 function checkTokenAndRun(){
     //xn_api_token이 발행되지 않았다면, https://canvas.skku.edu/api/v1/courses에서 과목id를 가져와 새 창을 연다.
+    //퍼센트 표시용
+    percentTimerTickCounter = 0;
+    console.log("타이머 시작");
+    let percentDisplayTimer = setInterval(function(){
+        percentTimerTickCounter++;
+        if (percentTimerTickCounter >= 500)
+            clearInterval(percentDisplayTimer);
+        chrome.tabs.query({currentWindow: true, active: true}, function(tabs)
+        {
+            chrome.scripting.executeScript({
+                target: {tabId:tabs[0].id, frameIds:[0]},
+                func:returnPercentFromHiddenDiv
+            }, function (result) {
+                console.log("타이머 호출 " + String(percentTimerTickCounter));
+                let sp = result[0].result.split("/");
+                updatePercent(Number(sp[0]), Number(sp[1]), percentDisplayTimer);
+            });
+        });
+
+    }, 50);//50ms 마다 재시도
+
+    console.log("작업 시작");
     chrome.tabs.query({currentWindow: true, active: true}, function(tabs)
     {
 
@@ -96,6 +141,7 @@ function getLearnStatus(cookie){
     {
         console.log("필요한 탭 가져옴.");
         console.log(tabs);
+
         chrome.scripting.executeScript({
             func:getComponents,
             args:[cookie],
@@ -229,7 +275,7 @@ function msToTime(time_ms){
 
 //마감기한을 보기좋게 만들기
 function dateToLocaleString(date){
-    newdate = new Date(date);
+    let newdate = new Date(date);
     return addSpace(newdate.getMonth()+1)+"월 "+addSpace(newdate.getDate())+"일("+dayOfWeek(newdate)+") "+newdate.toLocaleTimeString().substring(0,newdate.toLocaleTimeString().length-3);
 }
 
@@ -252,9 +298,21 @@ function replaceUnderbar(str){
 
 function getComponents()
 {
+    //퍼센트 전송을 위한 가상의 엘리먼트 생성
+    let percentHiddenDiv = document.getElementById("icampuscheck_plus_percent_hidden");
+    if (percentHiddenDiv === null)
+    {
+        console.log("새로 트래거용 엘리먼트를 만듦!")
+        percentHiddenDiv = document.createElement("div");
+        percentHiddenDiv.id = "percentHiddenDiv.id = icampuscheck_plus_percent_hidden;"; //특수한 이름 지정
+        percentHiddenDiv.style.display = 'none'; //숨김 처리
+
+    }
+
+
     let now = new Date();
 
-    var course_Array = [];
+    let course_Array = [];
     let userID = null;
     let studentID = null;
 
@@ -406,6 +464,12 @@ function getComponents()
             }
 
             RequestCompleteCount++;
+            percentHiddenDiv.innerText = String(RequestCompleteCount) + "/" + String(TargetCompleteFlag);
+            chrome.runtime.sendMessage({percent: [RequestCompleteCount,TargetCompleteFlag]}, (response) => {
+                console.log("메시지 콜백 받음.");
+                console.log(response);
+            });
+            console.log(percentHiddenDiv.innerText);
         }).fail(function(a, b,c,d)
         {
             console.log(c);
@@ -485,6 +549,12 @@ function getComponents()
 
             }
             RequestCompleteCount++;
+            chrome.runtime.sendMessage({percent: [RequestCompleteCount,TargetCompleteFlag]}, (response) => {
+                console.log("메시지 콜백 받음.");
+                console.log(response);
+            });
+            percentHiddenDiv.innerText = String(RequestCompleteCount) + "/" + String(TargetCompleteFlag);
+            console.log(percentHiddenDiv.innerText);
 
         }).fail(function(a, b,c,d)
         {
