@@ -2,8 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link href="includes/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="includes/bootstrap-icons.scss">
+
     <script src="includes/jquery-3.5.0.min.js"></script>
     <script src="script.js"></script>
     <style>
@@ -20,10 +19,10 @@
       @font-face {
         font-family: "HancomMalangMalang";
         src:
-                url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.otf') format('opentype'),
-                url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.ttf') format('truetype'),
-                url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.otf') format('opentype'),
-                url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.ttf') format('truetype');
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.otf') format('opentype'),
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.ttf') format('truetype'),
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.otf') format('opentype'),
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
       }
@@ -129,18 +128,10 @@
         font-size: 0.9rem;
         width: 720px;
       }
-      h1{
+      *{
         font-family : HancomMalangMalang;
       }
-      h2{
-        font-family : HancomMalangMalang;
-      }
-      * {
-        box-sizing: border-box;
-        padding: 0;
-        margin: 0;
-        font-family: monospace;
-      }
+
 
       .progress-bar {
         height: 20px;
@@ -152,7 +143,7 @@
 
       .container {
         width: 100%;
-        height: 100vh;
+        height: 1em;
         display: flex;
         flex-flow: column nowrap;
         justify-content: center;
@@ -182,13 +173,15 @@
         background: #263238;
         padding: 10px;
       }
-      #todoList{
-        font-family : HancomMalangMalang,serif;
-      }
     </style>
   </head>
   <body> 
     <h1 style="text-align: center;">아캠체크 플러스</h1>
+    <div class="container" id='loadingBar'>
+
+      <div class="progress"></div>
+      <p>Progressing</p>
+    </div>
     <div id="todoList">
         <details id ="lectureDetail" style="display: none;">
           <summary>강의 보기</summary>
@@ -204,15 +197,7 @@
           <summary>과제 보기</summary>
           <div id="assignment"></div>
         </details>
-
-        <div id='loadingBar' class="progress">
-          <div class="progress-bar">
-
-          </div>
-
         </div>
-        <h2 style="text-align: center;">Progressing</h2>
-        <p>probress</p>
       </div>
 
   </body>

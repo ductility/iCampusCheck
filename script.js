@@ -80,9 +80,6 @@ function updatePercent(completedTasks, totalTasks)
     let percent = Math.round(completedTasks / totalTasks * 100);
     pb.now = percent;
     pb.syncState();
-    spanObject.innerHTML = String(percent);
-    //console.log(percent);
-
 }
 
 
