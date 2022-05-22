@@ -183,31 +183,37 @@
         padding: 10px;
       }
       #todoList{
-        font-family : HancomMalangMalang;
+        font-family : HancomMalangMalang,serif;
       }
     </style>
   </head>
   <body> 
     <h1 style="text-align: center;">아캠체크 플러스</h1>
     <div id="todoList">
-      <details id ="lectureDetail" style="display: none;">
-        <summary>강의 보기</summary>
-        <div id="lecture"></div>
-      </details>
-      <p></p>
-      <details id ="zoomDetail" style="display: none;">
-        <summary>실시간강의 보기</summary>
-        <div id="zoom"></div>
-      </details>
-      <p></p>
-      <details id="assignmentDetail" style="display: none;">
-        <summary>과제 보기</summary>
-        <div id="assignment"></div>
-      </details>
+        <details id ="lectureDetail" style="display: none;">
+          <summary>강의 보기</summary>
+          <div id="lecture"></div>
+        </details>
+        <p></p>
+        <details id ="zoomDetail" style="display: none;">
+          <summary>실시간강의 보기</summary>
+          <div id="zoom"></div>
+        </details>
+        <p></p>
+        <details id="assignmentDetail" style="display: none;">
+          <summary>과제 보기</summary>
+          <div id="assignment"></div>
+        </details>
 
-      <div id='loadingBar' class="progress">
+        <div id='loadingBar' class="progress">
+          <div class="progress-bar">
+
+          </div>
+
+        </div>
         <h2 style="text-align: center;">Progressing</h2>
-        <div class="progress-bar"></div>
+        <p>probress</p>
       </div>
+
   </body>
 </html>
