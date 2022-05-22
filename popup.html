@@ -140,25 +140,27 @@
   <body>
     <h1 style="text-align: center;">아캠체크 플러스</h1>
     <div id="todoList">
-      <details id ="lectureDetail" style="display: none">
+      <details id ="lectureDetail" style="display: none;">
         <summary>강의 보기</summary>
         <div id="lecture"></div>
       </details>
       <p></p>
-      <details id ="zoomDetail" style="display: none">
+      <details id ="zoomDetail" style="display: none;">
         <summary>실시간강의 보기</summary>
         <div id="zoom"></div>
       </details>
       <p></p>
-      <details id="assignmentDetail" style="display: none">
+      <details id="assignmentDetail" style="display: none;">
         <summary>과제 보기</summary>
         <div id="assignment"></div>
       </details>
+
+      <div id='loadingBar'>
+        <h2 style="font-weight: bold; padding: 10px">Loading...(<span id="loading_percent">0</span>%)</h2><img src="loading.svg" style="padding: 9px;" alt="">
+      </div>
     </div>
 
-    <div id='loadingBar'>
-      <h2 style="font-weight: bold; padding: 10px">Loading...(<span id="loading_percent">0</span>%)</h2><img src="loading.svg" style="padding: 9px;" alt="">
-    </div>
+
 
 
   </body>

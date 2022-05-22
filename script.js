@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded',function(){
 
 chrome.runtime.onMessage.addListener(
     (request, sender, sendResponse) => {
-        console.log('메시지 받음');
+        //console.log('메시지 받음');
         request = request.percent;
         updatePercent(request[0], request[1]);
-        sendResponse({ msg:"메시지 잘 받았으니 돌려드림" });
+        //sendResponse({ msg:"메시지 잘 받았으니 돌려드림" });
 
     });
 
@@ -21,7 +21,7 @@ function updatePercent(completedTasks, totalTasks)
     {
         let percent = Math.round(completedTasks / totalTasks * 100);
         spanObject.innerHTML = String(percent);
-        console.log(percent);
+        //console.log(percent);
     }
 }
 
@@ -69,26 +69,6 @@ function checkToken()
 //필요한 토큰이 발행되었는지 확인하고, (x)이면 새창열어 토큰 발행(로딩시간생각해서 반복)
 function checkTokenAndRun(){
     //xn_api_token이 발행되지 않았다면, https://canvas.skku.edu/api/v1/courses에서 과목id를 가져와 새 창을 연다.
-    //퍼센트 표시용
-    percentTimerTickCounter = 0;
-    console.log("타이머 시작");
-    let percentDisplayTimer = setInterval(function(){
-        percentTimerTickCounter++;
-        if (percentTimerTickCounter >= 500)
-            clearInterval(percentDisplayTimer);
-        chrome.tabs.query({currentWindow: true, active: true}, function(tabs)
-        {
-            chrome.scripting.executeScript({
-                target: {tabId:tabs[0].id, frameIds:[0]},
-                func:returnPercentFromHiddenDiv
-            }, function (result) {
-                console.log("타이머 호출 " + String(percentTimerTickCounter));
-                let sp = result[0].result.split("/");
-                updatePercent(Number(sp[0]), Number(sp[1]), percentDisplayTimer);
-            });
-        });
-
-    }, 50);//50ms 마다 재시도
 
     console.log("작업 시작");
     chrome.tabs.query({currentWindow: true, active: true}, function(tabs)
@@ -98,9 +78,7 @@ function checkTokenAndRun(){
             target: {tabId:tabs[0].id, frameIds:[0]},
             func:checkToken
         }, function (result) {
-            console.log("injection result is");
-            console.log(result[0]);
-            console.log(result[0].result);
+
             console.log("api 토큰 검사 중...");
             if(result[0].result[0] === true){
                 console.log("api 토큰을 가져옵니다...");
@@ -140,7 +118,6 @@ function getLearnStatus(cookie){
     chrome.tabs.query({currentWindow: true, active: true}, function(tabs)
     {
         console.log("필요한 탭 가져옴.");
-        console.log(tabs);
 
         chrome.scripting.executeScript({
             func:getComponents,
@@ -159,7 +136,7 @@ function getLearnStatus(cookie){
                         const id = "lecture"+i;
                         const action_url = thingsToDo.lecture[i].url;
                         document.getElementById(id).addEventListener('click', function(event){
-                            console.log(action_url);
+
                             moveToContent(action_url);
                         });
                     }
@@ -198,9 +175,9 @@ function viewToDo(thingsToDo, callback){
     lecture.border = 1;
     assignment.border = 1;
     zoom.border = 1;
-    var lecture_HTML = "<table class='lecture'><caption>강의</caption>" + add_HTMLTAG(thingsToDo.lecture, "lecture");
-    var assignment_HTML = "<table class='assignment'><caption><span class='caption'>과제</span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
-    var zoom_HTML = "<table class='zoom'><caption><span class='caption'>실시간 강의</span></caption>" + add_HTMLTAG(thingsToDo.zoom, "zoom");
+    var lecture_HTML = "<table class='lecture' style='caption-side: top;'><caption>강의</caption>" + add_HTMLTAG(thingsToDo.lecture, "lecture");
+    var assignment_HTML = "<table class='assignment' style='caption-side: top;'><caption><span class='caption'>과제</span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
+    var zoom_HTML = "<table class='zoom' style='caption-side: top;'><caption><span class='caption'>실시간 강의</span></caption>" + add_HTMLTAG(thingsToDo.zoom, "zoom");
     // var assignment_HTML = "<table class='assignment'><caption><span class='caption'><span class='tooltip'>과목 사이드바에 '과제 및 평가'가 있는 과목은 직접 확인해야합니다. ༼༎ຶ෴༎ຶ༽</span>과제<span class='badge'>1</span></span></caption>" + add_HTMLTAG(thingsToDo.assignment, "assignment");
     lecture.innerHTML = lecture_HTML;
     assignment.innerHTML = assignment_HTML;
@@ -343,18 +320,6 @@ function replaceUnderbar(str){
 
 function getComponents()
 {
-    //퍼센트 전송을 위한 가상의 엘리먼트 생성
-    let percentHiddenDiv = document.getElementById("icampuscheck_plus_percent_hidden");
-    if (percentHiddenDiv === null)
-    {
-        console.log("새로 트래거용 엘리먼트를 만듦!")
-        percentHiddenDiv = document.createElement("div");
-        percentHiddenDiv.id = "percentHiddenDiv.id = icampuscheck_plus_percent_hidden;"; //특수한 이름 지정
-        percentHiddenDiv.style.display = 'none'; //숨김 처리
-
-    }
-
-
     let now = new Date();
 
     let course_Array = [];
@@ -509,12 +474,10 @@ function getComponents()
             }
 
             RequestCompleteCount++;
-            percentHiddenDiv.innerText = String(RequestCompleteCount) + "/" + String(TargetCompleteFlag);
             chrome.runtime.sendMessage({percent: [RequestCompleteCount,TargetCompleteFlag]}, (response) => {
                 console.log("메시지 콜백 받음.");
                 console.log(response);
             });
-            console.log(percentHiddenDiv.innerText);
         }).fail(function(a, b,c,d)
         {
             console.log(c);
@@ -598,8 +561,6 @@ function getComponents()
                 console.log("메시지 콜백 받음.");
                 console.log(response);
             });
-            percentHiddenDiv.innerText = String(RequestCompleteCount) + "/" + String(TargetCompleteFlag);
-            console.log(percentHiddenDiv.innerText);
 
         }).fail(function(a, b,c,d)
         {
