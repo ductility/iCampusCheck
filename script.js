@@ -175,50 +175,55 @@ function checkTokenAndRun(){
 
 //getComponents()를 실행해, 필요한 데이터 가져오기
 function getLearnStatus(cookie){
-    chrome.tabs.query({currentWindow: true, active: true}, function(tabs)
-    {
-        console.log("필요한 탭 가져옴.");
+    if (window.jQuery) {
+        chrome.tabs.query({currentWindow: true, active: true}, function(tabs)
+        {
+            console.log("필요한 탭 가져옴.");
 
-        chrome.scripting.executeScript({
-            func:getComponents,
-            args:[cookie],
-            target: {tabId:tabs[0].id, frameIds:[0]}
-        }, function (result) {
+            chrome.scripting.executeScript({
+                func:getComponents,
+                args:[cookie],
+                target: {tabId:tabs[0].id, frameIds:[0]}
+            }, function (result) {
 
 
-            result = result[0].result;
-            console.log("과목 정보 가져옴!");
-            if(result !== null) {
-                let thingsToDo = sortToDo(result);
-                //콜백함수 사용, Table에 강의/과제 자료를 띄운 뒤 클릭하면 해당 url로 이동할 수 있게함
-                viewToDo(thingsToDo, function(){
-                    for(let i=0; i<thingsToDo.lecture.length; i++){
-                        const id = "lecture"+i;
-                        const action_url = thingsToDo.lecture[i].url;
-                        document.getElementById(id).addEventListener('click', function(event){
+                result = result[0].result;
+                console.log("과목 정보 가져옴!");
+                if(result !== null) {
+                    let thingsToDo = sortToDo(result);
+                    //콜백함수 사용, Table에 강의/과제 자료를 띄운 뒤 클릭하면 해당 url로 이동할 수 있게함
+                    viewToDo(thingsToDo, function(){
+                        for(let i=0; i<thingsToDo.lecture.length; i++){
+                            const id = "lecture"+i;
+                            const action_url = thingsToDo.lecture[i].url;
+                            document.getElementById(id).addEventListener('click', function(event){
 
-                            moveToContent(action_url);
-                        });
-                    }
-                    for(let i=0; i<thingsToDo.assignment.length; i++){
-                        const id = "assignment"+i;
-                        const action_url = thingsToDo.assignment[i].url;
-                        document.getElementById(id).addEventListener('click', function(event){
-                            moveToContent(action_url);
-                        });
-                    }
-                    for(let i=0; i<thingsToDo.zoom.length; i++){
-                        const id = "zoom"+i;
-                        const action_url = thingsToDo.zoom[i].url;
-                        document.getElementById(id).addEventListener('click', function(event){
-                            moveToContent(action_url);
-                        });
-                    }
-                });
-            }
-            else document.querySelector("#assignment").innerHTML = "데이터를 불러오는데 실패했습니다. 새로고침 후 재실행 해주세요";
+                                moveToContent(action_url);
+                            });
+                        }
+                        for(let i=0; i<thingsToDo.assignment.length; i++){
+                            const id = "assignment"+i;
+                            const action_url = thingsToDo.assignment[i].url;
+                            document.getElementById(id).addEventListener('click', function(event){
+                                moveToContent(action_url);
+                            });
+                        }
+                        for(let i=0; i<thingsToDo.zoom.length; i++){
+                            const id = "zoom"+i;
+                            const action_url = thingsToDo.zoom[i].url;
+                            document.getElementById(id).addEventListener('click', function(event){
+                                moveToContent(action_url);
+                            });
+                        }
+                    });
+                }
+                else document.querySelector("#assignment").innerHTML = "데이터를 불러오는데 실패했습니다. 새로고침 후 재실행 해주세요";
+            });
         });
-    });
+    } else {
+        document.querySelector("#assignment").innerHTML = "데이터를 불러오는데 실패했습니다. 새로고침 후 재실행 해주세요";
+    }
+
 
 }
 
