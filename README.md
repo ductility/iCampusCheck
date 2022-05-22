@@ -45,3 +45,5 @@ https://coding-factory.tistory.com/144
 * Stack OverFlow, Chrome Extension “Refused to load the script because it violates the following Content Security Policy directive”   
 https://stackoverflow.com/questions/34950009/chrome-extension-refused-to-load-the-script-because-it-violates-the-following-c
 * popup창과 content script간에 통신 (ProgressBar 표시) https://bekusib.tistory.com/143
+* ProgressBar 표시
+  https://codepen.io/alvarotrigo/pen/dyVYJmJ
