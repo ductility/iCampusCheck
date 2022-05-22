@@ -2,7 +2,7 @@
 
 <img src="https://user-images.githubusercontent.com/100834069/169684375-9c2bb4ec-157c-4709-b9ff-e5fae1bbe113.png">
 
-오픈소스실습 팀 프로젝트로 기존 아이캠퍼스 체크 플러스의 기능과 가시성을 향상시켰습니다.
+오픈소스 프로그래밍 실습 팀10 프로젝트로 기존 아이캠퍼스 체크 플러스의 기능과 가시성을 향상시켰습니다.
 
 원본 : https://github.com/ductility/iCampusCheck
 
