@@ -117,6 +117,33 @@ function sortToDo(thingsToDo){
     });
     return thingsToDo
 }
+function handleChange(src) {
+    //checkTokenAndRun()
+}
+
+//적게남은 시간, 과목명, 과제명 순으로 정렬
+function sortWithTime(thingsToDo) {
+    thingsToDo.lecture.sort(function (a, b) {
+        return a["remainingTime_ms"] - b["remainingTime_ms"];
+
+    });
+    thingsToDo.assignment.sort(function (a, b) {
+        return a["remainingTime_ms"] - b["remainingTime_ms"];
+    });
+    return thingsToDo
+}
+
+//과목 별 정렬
+function sortWithCourse(thingsToDo) {
+    thingsToDo.lecture.sort(function (a, b) {
+        return a["course"] - b["course"];
+
+    });
+    thingsToDo.assignment.sort(function (a, b) {
+        return a["course"] - b["course"];
+    });
+    return thingsToDo
+}
 
 //시간차 계산
 function gapTime(now, date){

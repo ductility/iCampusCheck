@@ -110,6 +110,8 @@
   </head>
   <body>
     <h1 style="text-align: center;">아캠체크 Plus</h1>
+    <label><input type="checkbox" name="sortop" id="sortByTime" onchange="handleChange(this);" checked> 시간순 정렬</label>
+    <label><input type="radio" name="sortop" id="sortByCourse" onchange="handleChange(this);"> 과목별 정렬</label>
     <div id="lecture"></div>
     <p></p>
     <div id="zoom"></div>
