@@ -1,5 +1,9 @@
+let pb; //ProgressBar 객체가 담기는 변수
+
 //html DOM이 로드된 후 실행
 document.addEventListener('DOMContentLoaded',function(){
+    pb = new Progress(0, 0, 100, {parent : ".progress"});
+    console.log(pb);
     checkTokenAndRun();
 
 });
@@ -7,11 +11,67 @@ document.addEventListener('DOMContentLoaded',function(){
 chrome.runtime.onMessage.addListener(
     (request, sender, sendResponse) => {
         //console.log('메시지 받음');
+
         request = request.percent;
         updatePercent(request[0], request[1]);
         //sendResponse({ msg:"메시지 잘 받았으니 돌려드림" });
 
     });
+
+function elt(type, prop, ...childrens) {
+    let elem = document.createElement(type);
+    if (prop) Object.assign(elem, prop);
+    for (let child of childrens) {
+      if (typeof child == "string") elem.appendChild(document.createTextNode(child));
+      else elem.appendChild(elem);
+    }
+    return elem;
+  }
+  
+//Progress class
+class Progress {
+    constructor(now, min, max, options) {
+      this.dom = elt("div", {
+        className: "progress-bar"
+      });
+      this.min = min;
+      this.max = max;
+      this.intervalCode = 0;
+      this.now = now;
+      this.syncState();
+      if(options.parent){
+        document.querySelector(options.parent).appendChild(this.dom);
+      }
+      else document.body.appendChild(this.dom)
+    }
+
+    syncState() {
+      this.dom.style.width = this.now + "%";
+    }
+
+    startTo(step, time) {
+      if (this.intervalCode !== 0) return;
+      this.intervalCode = setInterval(() => {
+        console.log("sss")
+        if (this.now + step > this.max) {
+          this.now = this.max;
+          this.syncState();
+          clearInterval(this.interval);
+          this.intervalCode = 0;
+          return;
+        }
+        this.now += step;
+        this.syncState()
+      }, time)
+    }
+
+    end() {
+      this.now = this.max;
+      clearInterval(this.intervalCode);
+      this.intervalCode = 0;
+      this.syncState();
+    }
+}
 
 //퍼센트 업데이트
 function updatePercent(completedTasks, totalTasks)
@@ -21,8 +81,10 @@ function updatePercent(completedTasks, totalTasks)
     {
         let percent = Math.round(completedTasks / totalTasks * 100);
         spanObject.innerHTML = String(percent);
-        //console.log(percent);
+        pb.now = percent;
+        pb.syncState();
     }
+
 }
 
 
@@ -69,11 +131,9 @@ function checkToken()
 //필요한 토큰이 발행되었는지 확인하고, (x)이면 새창열어 토큰 발행(로딩시간생각해서 반복)
 function checkTokenAndRun(){
     //xn_api_token이 발행되지 않았다면, https://canvas.skku.edu/api/v1/courses에서 과목id를 가져와 새 창을 연다.
-
     console.log("작업 시작");
     chrome.tabs.query({currentWindow: true, active: true}, function(tabs)
     {
-
         chrome.scripting.executeScript({
             target: {tabId:tabs[0].id, frameIds:[0]},
             func:checkToken
@@ -475,8 +535,7 @@ function getComponents()
 
             RequestCompleteCount++;
             chrome.runtime.sendMessage({percent: [RequestCompleteCount,TargetCompleteFlag]}, (response) => {
-                console.log("메시지 콜백 받음.");
-                console.log(response);
+
             });
         }).fail(function(a, b,c,d)
         {
@@ -558,8 +617,7 @@ function getComponents()
             }
             RequestCompleteCount++;
             chrome.runtime.sendMessage({percent: [RequestCompleteCount,TargetCompleteFlag]}, (response) => {
-                console.log("메시지 콜백 받음.");
-                console.log(response);
+
             });
 
         }).fail(function(a, b,c,d)

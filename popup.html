@@ -2,8 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link href="includes/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="includes/bootstrap-icons.scss">
+
     <script src="includes/jquery-3.5.0.min.js"></script>
     <script src="script.js"></script>
     <style>
@@ -20,10 +19,10 @@
       @font-face {
         font-family: "HancomMalangMalang";
         src:
-                url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.otf') format('opentype'),
-                url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.ttf') format('truetype'),
-                url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.otf') format('opentype'),
-                url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.ttf') format('truetype');
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.otf') format('opentype'),
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.ttf') format('truetype'),
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.otf') format('opentype'),
+        url('Fonts/Hancom MalangMalang/HancomMalangMalang-Regular.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
       }
@@ -129,39 +128,57 @@
         font-size: 0.9rem;
         width: 720px;
       }
-      h1{
+      *{
         font-family : HancomMalangMalang;
       }
-      #todoList{
-        font-family : HancomMalangMalang;
+
+
+      .progress-bar {
+        height: 20px;
+        background: #004483eb;
+        box-shadow: 2px 14px 15px -7px rgba(30, 166, 250, 0.36);
+        border-radius: 50px;
+        transition: all 0.5s;
       }
+
+      .container {
+        width: 100%;
+        height: 1em;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+      }
+      .container h2 {
+        margin-bottom: 20px;
+      }
+
     </style>
   </head>
-  <body>
+  <body> 
     <h1 style="text-align: center;">아캠체크 플러스</h1>
-    <div id="todoList">
-      <details id ="lectureDetail" style="display: none;">
-        <summary>강의 보기</summary>
-        <div id="lecture"></div>
-      </details>
-      <p></p>
-      <details id ="zoomDetail" style="display: none;">
-        <summary>실시간강의 보기</summary>
-        <div id="zoom"></div>
-      </details>
-      <p></p>
-      <details id="assignmentDetail" style="display: none;">
-        <summary>과제 보기</summary>
-        <div id="assignment"></div>
-      </details>
+    <div class="" id='loadingBar'>
 
-      <div id='loadingBar'>
-        <h2 style="font-weight: bold; padding: 10px">Loading...(<span id="loading_percent">0</span>%)</h2><img src="loading.svg" style="padding: 9px;" alt="">
-      </div>
+      <div class="progress"></div>
+      <p>Progressing (<span id="loading_percent">0</span>%)</p>
     </div>
-
-
-
+    <div id="todoList">
+        <details id ="lectureDetail" style="display: none;">
+          <summary>강의 보기</summary>
+          <div id="lecture"></div>
+        </details>
+        <p></p>
+        <details id ="zoomDetail" style="display: none;">
+          <summary>실시간강의 보기</summary>
+          <div id="zoom"></div>
+        </details>
+        <p></p>
+        <details id="assignmentDetail" style="display: none;">
+          <summary>과제 보기</summary>
+          <div id="assignment"></div>
+        </details>
+        </div>
+      </div>
 
   </body>
 </html>

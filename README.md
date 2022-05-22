@@ -2,9 +2,9 @@
 
 <img src="https://user-images.githubusercontent.com/100834069/169684375-9c2bb4ec-157c-4709-b9ff-e5fae1bbe113.png">
 
-오픈소스실습 팀 프로젝트로 기존 아이캠퍼스 체크 플러스의 기능과 가시성을 향상시켰습니다.
+**오픈소스소프트웨어실습_SWE2021_41(이상원)** 수업 기말 팀프로젝트로 기존 아이캠퍼스 체크 플러스의 기능과 가시성을 향상시켰습니다.
 
-원본 : https://github.com/ductility/iCampusCheck
+원본 프로젝트 : [ductility/iCampusCheck](https://github.com/ductility/iCampusCheck)
 
 ## 사용법
 <img src="https://raw.githubusercontent.com/ductility/images/master/iCampusCheck(0.1.0).gif">
@@ -14,15 +14,19 @@
 
 ## 주의사항
 
+* 과제 및 평가 항목에서도 내용을 가져오므로 로딩시간이 **다소 증가**했습니다.
+  * xhr 요청을 강의컨텐츠와 과제 및 평가 둘 다 보냄.
 * 새 창에 어떤 과목의 <출결/학습현황>목록이 뜨는 것은 api 사용을 위한 토큰 쿠키를 발행하기 위한 과정입니다. 오류가 아닙니다.
 
 ## 다음에 추가할 것
 * Option Page를 추가해 별도 tab에 내용 더 보기 좋게 기재하기
+* 과제에서 과제 종류별로 다른 아이콘 표시
 
 ## 버전별 추가 내용
 * 1.0.0
-기존 아이캠퍼스 체크 플러스의 기능 향상
-과제 및 평가에서도 가져올 수 있게 함
+  * 기존 아이캠퍼스 체크 플러스의 디자인 향상
+  * 과제 및 평가에서도 가져올 수 있게 함
+  * ProgressBar 추가로 길어진 로딩시간 동안 볼거리 제공
 
 
 ## 참고 URL
@@ -40,3 +44,6 @@ https://brunch.co.kr/@joypinkgom/86
 https://coding-factory.tistory.com/144
 * Stack OverFlow, Chrome Extension “Refused to load the script because it violates the following Content Security Policy directive”   
 https://stackoverflow.com/questions/34950009/chrome-extension-refused-to-load-the-script-because-it-violates-the-following-c
+* popup창과 content script간에 통신 (ProgressBar 표시) https://bekusib.tistory.com/143
+* ProgressBar 표시
+  https://codepen.io/alvarotrigo/pen/dyVYJmJ
