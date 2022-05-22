@@ -76,10 +76,15 @@ class Progress {
 //퍼센트 업데이트
 function updatePercent(completedTasks, totalTasks)
 {
+    let spanObject = document.querySelector("#loading_percent");
+    if (spanObject !== null)
+    {
+        let percent = Math.round(completedTasks / totalTasks * 100);
+        spanObject.innerHTML = String(percent);
+        pb.now = percent;
+        pb.syncState();
+    }
 
-    let percent = Math.round(completedTasks / totalTasks * 100);
-    pb.now = percent;
-    pb.syncState();
 }
 
 
