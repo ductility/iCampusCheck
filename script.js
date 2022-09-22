@@ -1,48 +1,69 @@
-//html DOM이 로드된 후 실행
-document.addEventListener('DOMContentLoaded',function(){
-    // SIOR 전시회 홍보 그림에 링크
-    // document.getElementById('poster').addEventListener('click', function(event){
-    //     moveToContent("http://sior.ddns.net/exhibition-2020/");                        
-    // });
+var tabId = null;
+var DOMAIN = "https://canvas.skku.edu";
 
-    checkTokenAndRun();
+//html DOM이 로드된 후 실행
+document.addEventListener('DOMContentLoaded',  function(tabs){
+    chrome.tabs.query({currentWindow: true, active: true}, async function(tabs){
+        tabId = tabs[0].id;
+        await loadJQuery();
+        await checkTokenAndRun();
+    });
+    
 });
 
-//필요한 토큰이 발행되었는지 확인하고, (x)이면 새창열어 토큰 발행(로딩시간생각해서 반복)
-function checkTokenAndRun(){
-    //xn_api_token이 발행되지 않았다면, https://canvas.skku.edu/api/v1/courses에서 과목id를 가져와 새 창을 연다.
-    chrome.tabs.executeScript({
-        code: 'var tempCourses=null;if(getCookie("xn_api_token")==null){var get_courses={"url":"https://canvas.skku.edu/api/v1/courses","method":"GET","timeout":0,"async":false,"dataType":"json"};$.ajax(get_courses).done(function(response){tempCourses=response})}tempCourses;'
-    }, function (result) {
-        if(result[0]!=null){
-            console.log(result[0]);
-            var index = 0;
-            while(result[0][index].name==null) index = index + 1;
-            var action_url = "https://canvas.skku.edu/courses/"+result[0][index].id+"/external_tools/5";
-            chrome.tabs.create({ url: action_url, active: false});
-            var timerID = setInterval(function(){
-                chrome.tabs.executeScript({
-                    code: 'getCookie("xn_api_token");'
-                }, function (result) {
-                    if(result[0]!=null){
-                        getLearnStatus();
-                        clearInterval(timerID);
-                    }});
-            }, 500);//500ms 마다 재시도
-        }
-        else getLearnStatus();
+async function loadJQuery() {
+    await chrome.scripting.executeScript({target: { tabId: tabId}, files: ["/jquery-3.5.0.min.js"]}, function(result) {
+    })  
+}
+
+async function getXnApiTokenCookieValue() {
+    let cookie = await chrome.cookies.get({
+        name: "xn_api_token",
+        url: DOMAIN
     });
+
+    return cookie? cookie["value"] : null;
+}
+
+
+//새창열어 토큰 발행(로딩시간생각해서 반복)
+async function checkTokenAndRun() {
+    xn_api_token_value = await getXnApiTokenCookieValue();
+    if(!xn_api_token_value){
+        let results = await chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            files: ["js/innerInjectionCode.js"]
+        }, async (result) => {
+    
+            result = result[0]["result"];
+    
+            //xn_api_token이 발행되지 않았다면, https://canvas.skku.edu/api/v1/courses에서 과목id를 가져와 새 창을 연다.
+            var action_url = `${DOMAIN}/courses/`+result[0]+"/external_tools/5";
+            await chrome.tabs.create({ url: action_url, active: false});
+
+            var timerID = setInterval(async function(){
+                xn_api_token_value = await getXnApiTokenCookieValue();
+                if(xn_api_token_value){
+                    await getLearnStatus();
+                    clearInterval(timerID);
+                }   
+            }, 500);//500ms 마다 재시도
+        });
+    }
+    else{
+        await getLearnStatus();
+    }
 }
 
 //executescript.js를 실행해, 필요한 데이터 가져오기
-function getLearnStatus(){
-    chrome.tabs.executeScript({
-        file: "/executescript.js",
-        allFrames: true
+async function getLearnStatus(){
+    chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        files: ["js/executescript.js"],
     }, function (result) {
         if(result[0]!=null){
-            console.log(result[0]);
-            var thingsToDo = sortToDo(result[0]);
+            result = result[0]["result"]
+            var thingsToDo = sortToDo(result);
             //콜백함수 사용, Table에 강의/과제 자료를 띄운 뒤 클릭하면 해당 url로 이동할 수 있게함
             viewToDo(thingsToDo, function(){
                 for(var i=0; i<thingsToDo.lecture.length; i++){
