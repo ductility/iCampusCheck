@@ -5,11 +5,55 @@ var DOMAIN = "https://canvas.skku.edu";
 document.addEventListener('DOMContentLoaded',  function(tabs){
     chrome.tabs.query({currentWindow: true, active: true}, async function(tabs){
         tabId = tabs[0].id;
-        await loadJQuery();
-        await checkTokenAndRun();
+        // await loadJQuery();
+        // await checkTokenAndRun();
+        // await insertCalender();
     });
     
 });
+
+async function insertCalender(summary, description, start_time, end_time) {
+    await chrome.identity.getAuthToken({ interactive: true }, function (token) {
+      alert(token);
+  
+      //details about the event
+      let event = {
+        summary: summary,
+        description: description,
+        start: {
+          'dateTime': start_time,
+        // ex:  '2022-09-23T09:00:00-07:00'
+          'timeZone': 'America/Los_Angeles'
+        },
+        end: {
+          'dateTime': end_time,
+          'timeZone': 'America/Los_Angeles'
+        }
+      };
+  
+      let fetch_options = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(event),
+      };
+  
+      fetch(
+        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+        fetch_options
+      )
+        .then(function(response) {
+            alert(JSON.stringify(response));
+            response.json();
+        }) // Transform the data into json
+        .then(function (data) {
+          console.log(data);//contains the response of the created event
+        });
+    });
+  }
+
 
 async function loadJQuery() {
     await chrome.scripting.executeScript({target: { tabId: tabId}, files: ["/jquery-3.5.0.min.js"]}, function(result) {

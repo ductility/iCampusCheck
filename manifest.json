@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     
-    "name": "iCampus Check",
+    "name": "iCampus Manager",
     "description": "Show to-do list on SKKU iCampus",
     "version": "0.1.6",
 
@@ -37,10 +37,18 @@
       "scripting", 
       "activeTab", 
       "declarativeContent", 
-      "cookies"
+      "cookies",
+      "identity"
     ],
 
     "host_permissions": [
       "*://*.canvas.skku.edu/*"
-    ]
+    ],
+
+    "oauth2": {
+      "client_id": "537366600049-ft46sr9r84671744kfgsp2qq84qv7cdk.apps.googleusercontent.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/calendar"
+      ]
+    }
   }
