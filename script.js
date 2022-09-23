@@ -5,55 +5,37 @@ var DOMAIN = "https://canvas.skku.edu";
 document.addEventListener('DOMContentLoaded',  function(tabs){
     chrome.tabs.query({currentWindow: true, active: true}, async function(tabs){
         tabId = tabs[0].id;
-        await loadJQuery();
-        await checkTokenAndRun();
-        // await insertCalender();
+        await getCalenderItemList();
+        // await loadJQuery();
+        // await checkTokenAndRun();
     });
     
 });
 
-async function insertCalender() {
-    await chrome.identity.getAuthToken({ interactive: true }, function (token) {
-      alert(`token: ${token}`);
-  
-      //details about the event
-      let event = {
-        summary: "문제해결과알고리즘",
-        description: "과제#3[제출필수]",
-        start: {
-          'dateTime': "2022-09-25T14:59:59",
-          'timeZone': 'Asia/Seoul'
-        },
-        end: {
-          'dateTime': "2022-09-25T15:59:59",
-          'timeZone': 'Asia/Seoul'
-        }
-      };
-  
-      let fetch_options = {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(event),
-      };
-  
-      fetch(
-        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
-        fetch_options
-      )
-        .then(function(response) {
-            alert(JSON.stringify(response));
-            response.json();
-        }) // Transform the data into json
-        .then(function (data) {
-          console.log(data);//contains the response of the created event
-        });
+async function getCalenderItemList() {
+    await chrome.identity.getAuthToken({ interactive: true }, async function (token) {
+        let keyword = "🎯 [과제]"
+        let fetch_options = {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        var response = await fetch(
+            'https://www.googleapis.com/calendar/v3/calendars/primary/events'+`?q=${keyword}`,
+            fetch_options
+        );
+
+        // alert((response.status));
+        
+        var data = await response.json();
+
+        var calendar_item_list = data["items"];
+        alert(JSON.stringify(calendar_item_list));
     });
-  }
-
-
+}
   
 async function insertCalenderItem({summary, description, start_time, end_time, token}) {
     //details about the event
@@ -71,19 +53,6 @@ async function insertCalenderItem({summary, description, start_time, end_time, t
             'timeZone': 'Asia/Seoul'
         }
     };
-
-    // let event = {
-    //     summary: "문제해결과알고리즘",
-    //     description: "과제#3[제출필수]",
-    //     start: {
-    //         'dateTime': "2022-09-25T14:59:59",
-    //         'timeZone': 'Asia/Seoul'
-    //     },
-    //     end: {
-    //         'dateTime': "2022-09-25T15:59:59",
-    //         'timeZone': 'Asia/Seoul'
-    //     }
-    // };
 
     let fetch_options = {
         method: 'POST',
