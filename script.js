@@ -5,29 +5,28 @@ var DOMAIN = "https://canvas.skku.edu";
 document.addEventListener('DOMContentLoaded',  function(tabs){
     chrome.tabs.query({currentWindow: true, active: true}, async function(tabs){
         tabId = tabs[0].id;
-        // await loadJQuery();
-        // await checkTokenAndRun();
+        await loadJQuery();
+        await checkTokenAndRun();
         // await insertCalender();
     });
     
 });
 
-async function insertCalender(summary, description, start_time, end_time) {
+async function insertCalender() {
     await chrome.identity.getAuthToken({ interactive: true }, function (token) {
-      alert(token);
+      alert(`token: ${token}`);
   
       //details about the event
       let event = {
-        summary: summary,
-        description: description,
+        summary: "문제해결과알고리즘",
+        description: "과제#3[제출필수]",
         start: {
-          'dateTime': start_time,
-        // ex:  '2022-09-23T09:00:00-07:00'
-          'timeZone': 'America/Los_Angeles'
+          'dateTime': "2022-09-25T14:59:59",
+          'timeZone': 'Asia/Seoul'
         },
         end: {
-          'dateTime': end_time,
-          'timeZone': 'America/Los_Angeles'
+          'dateTime': "2022-09-25T15:59:59",
+          'timeZone': 'Asia/Seoul'
         }
       };
   
@@ -53,6 +52,61 @@ async function insertCalender(summary, description, start_time, end_time) {
         });
     });
   }
+
+
+  
+async function insertCalenderItem({summary, description, start_time, end_time, token}) {
+    //details about the event
+    alert(`${summary}: ${start_time}/${token}`);
+
+    let event = {
+        summary: summary,
+        description: description,
+        start: {
+            'dateTime': start_time,
+            'timeZone': 'Asia/Seoul'
+        },
+        end: {
+            'dateTime': end_time,
+            'timeZone': 'Asia/Seoul'
+        }
+    };
+
+    // let event = {
+    //     summary: "문제해결과알고리즘",
+    //     description: "과제#3[제출필수]",
+    //     start: {
+    //         'dateTime': "2022-09-25T14:59:59",
+    //         'timeZone': 'Asia/Seoul'
+    //     },
+    //     end: {
+    //         'dateTime': "2022-09-25T15:59:59",
+    //         'timeZone': 'Asia/Seoul'
+    //     }
+    // };
+
+    let fetch_options = {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(event),
+    };
+
+    await fetch(
+        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+        fetch_options
+    )
+    .then(function(response) {
+        // alert(JSON.stringify(response));
+        response.json();
+    }) 
+    .then(function (data) {
+        console.log(data);
+    });
+}
+
 
 
 async function loadJQuery() {
@@ -104,7 +158,7 @@ async function getLearnStatus(){
     chrome.scripting.executeScript({
         target: { tabId: tabId },
         files: ["js/executescript.js"],
-    }, function (result) {
+    }, async function (result) {
         if(result[0]!=null){
             result = result[0]["result"]
             var thingsToDo = sortToDo(result);
@@ -126,6 +180,29 @@ async function getLearnStatus(){
                     });
                 }
             });
+            // alert(`thingsToDo: ${JSON.stringify(thingsToDo)}`);
+            chrome.identity.getAuthToken({ interactive: true }, function (token) {
+                // alert(`token: ${token}`);
+                let task_list = thingsToDo["assignment"];
+
+                for(var task of task_list) {
+                    var start_time = new Date(task["due"]);
+                    var end_time = new Date(start_time.getTime() + (20 * 60 * 1000));
+                    
+                    var start_time_json = start_time.toJSON();
+                    var end_time_json = end_time.toJSON();
+
+                    var params = {
+                        "summary": `🎯[과제] ${task["course"].split("_")[0]}`,
+                        "description": `${task["title"]}`,
+                        "start_time": `${start_time_json.endsWith("Z") ? start_time_json.slice(0,-1) : start_time_json}`,
+                        "end_time": `${end_time_json.endsWith("Z") ? end_time_json.slice(0,-1) : end_time_json}`,
+                        "token": `${token}`
+                    }
+                    insertCalenderItem(params);
+                }
+            });
+
         }
         else document.querySelector("#assignment").innerHTML = "데이터를 불러오는데 실패했습니다. 새로고침 후 재실행 해주세요";
     });
