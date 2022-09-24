@@ -1,5 +1,6 @@
 var tabId = null;
 var DOMAIN = "https://canvas.skku.edu";
+var CALENDAR_ITEM_LIST = null;
 
 //html DOM이 로드된 후 실행
 document.addEventListener('DOMContentLoaded',  function(tabs){
@@ -32,8 +33,11 @@ async function getCalenderItemList() {
         
         var data = await response.json();
 
-        var calendar_item_list = data["items"];
-        alert(JSON.stringify(calendar_item_list));
+        CALENDAR_ITEM_LIST = data["items"];
+        alert(JSON.stringify(CALENDAR_ITEM_LIST));
+
+        await loadJQuery();
+        await checkTokenAndRun();
     });
 }
   
@@ -122,6 +126,22 @@ async function checkTokenAndRun() {
     }
 }
 
+function checkDuplicateCalendar(params){
+    // alert("check duplicate");
+
+    for(var item of CALENDAR_ITEM_LIST){
+        var summary_same = params["summary"] == item["summary"];
+        var description_same = params["description"] == item["description"];
+        // var start_time_same = new Date(params["start_time"]) == new Date(item["start_time"]);
+        
+        // alert(`${summary_same} ${description_same}`);
+        if(summary_same && description_same ){
+            return true;
+        }
+    }   
+    return false;
+}
+
 //executescript.js를 실행해, 필요한 데이터 가져오기
 async function getLearnStatus(){
     chrome.scripting.executeScript({
@@ -168,7 +188,10 @@ async function getLearnStatus(){
                         "end_time": `${end_time_json.endsWith("Z") ? end_time_json.slice(0,-1) : end_time_json}`,
                         "token": `${token}`
                     }
-                    insertCalenderItem(params);
+                    if(!checkDuplicateCalendar(params)){
+                        alert(`${summary} 캘린더 삽입`);
+                        insertCalenderItem(params);
+                    }
                 }
             });
 
