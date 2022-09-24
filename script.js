@@ -10,12 +10,11 @@ document.addEventListener('DOMContentLoaded',  function(tabs){
         // await loadJQuery();
         // await checkTokenAndRun();
     });
-    
 });
 
 async function getCalenderItemList() {
     await chrome.identity.getAuthToken({ interactive: true }, async function (token) {
-        let keyword = "🎯 [과제]"
+        let keyword = "🎯[과제]"
         let fetch_options = {
             method: 'GET',
             headers: {
@@ -182,14 +181,14 @@ async function getLearnStatus(){
                     var end_time_json = end_time.toJSON();
 
                     var params = {
-                        "summary": `🎯[과제] ${task["course"].split("_")[0]}`,
-                        "description": `${task["title"]}`,
+                        "summary": `🎯[과제] ${task["course"].split("_")[0]}-${task["title"]}`,
+                        "description": `${task["url"]}`,
                         "start_time": `${start_time_json.endsWith("Z") ? start_time_json.slice(0,-1) : start_time_json}`,
                         "end_time": `${end_time_json.endsWith("Z") ? end_time_json.slice(0,-1) : end_time_json}`,
                         "token": `${token}`
                     }
                     if(!checkDuplicateCalendar(params)){
-                        alert(`${summary} 캘린더 삽입`);
+                        // alert(`🎯[과제] ${task["course"].split("_")[0]}-${task["title"]} 캘린더 삽입`);
                         insertCalenderItem(params);
                     }
                 }
