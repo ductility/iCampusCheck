@@ -2,6 +2,7 @@ var tabId = null;
 var DOMAIN = "https://canvas.skku.edu";
 var CALENDAR_ITEM_LIST = null;
 
+
 //html DOM이 로드된 후 실행
 document.addEventListener('DOMContentLoaded',  function(tabs){
     chrome.tabs.query({currentWindow: true, active: true}, async function(tabs){
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded',  function(tabs){
         // await checkTokenAndRun();
     });
 });
+
 
 async function getCalenderItemList() {
     await chrome.identity.getAuthToken({ interactive: true }, async function (token) {
@@ -28,8 +30,6 @@ async function getCalenderItemList() {
             fetch_options
         );
 
-        // alert((response.status));
-        
         var data = await response.json();
 
         CALENDAR_ITEM_LIST = data["items"];
@@ -40,6 +40,7 @@ async function getCalenderItemList() {
     });
 }
   
+
 async function insertCalenderItem({summary, description, start_time, end_time, token}) {
     //details about the event
     alert(`${summary}: ${start_time}/${token}`);
@@ -80,11 +81,11 @@ async function insertCalenderItem({summary, description, start_time, end_time, t
 }
 
 
-
 async function loadJQuery() {
     await chrome.scripting.executeScript({target: { tabId: tabId}, files: ["/jquery-3.5.0.min.js"]}, function(result) {
     })  
 }
+
 
 async function getXnApiTokenCookieValue() {
     let cookie = await chrome.cookies.get({
@@ -96,7 +97,7 @@ async function getXnApiTokenCookieValue() {
 }
 
 
-//새창열어 토큰 발행(로딩시간생각해서 반복)
+/** 새창열어 토큰 발행(로딩시간생각해서 반복) */
 async function checkTokenAndRun() {
     xn_api_token_value = await getXnApiTokenCookieValue();
     if(!xn_api_token_value){
@@ -125,6 +126,7 @@ async function checkTokenAndRun() {
     }
 }
 
+
 function checkDuplicateCalendar(params){
     // alert("check duplicate");
 
@@ -141,7 +143,8 @@ function checkDuplicateCalendar(params){
     return false;
 }
 
-//executescript.js를 실행해, 필요한 데이터 가져오기
+
+/** executescript.js를 실행해, 필요한 데이터 가져오기 */
 async function getLearnStatus(){
     chrome.scripting.executeScript({
         target: { tabId: tabId },
@@ -199,12 +202,12 @@ async function getLearnStatus(){
     });
 }
 
-//새창열기
+/** 새창 열기 */
 function moveToContent(action_url){
     chrome.tabs.create({ url: action_url, active: false});
 }
 
-//html에 ToDoList 띄우기
+/** html에 ToDoList 띄우기 */
 function viewToDo(thingsToDo, callback){
     var lecture = document.querySelector("#lecture");
     var assignment = document.querySelector("#assignment");
@@ -219,7 +222,7 @@ function viewToDo(thingsToDo, callback){
     callback();
 }
 
-//table에 삽입 할 내용
+/** table에 삽입 할 내용 */
 function add_HTMLTAG(data, type){
     var HTML_data = '<thead><tr><th class="colum1">과목</th><th class="colum2">제목</th><th class="colum3">마감기한</th><th class="colum4">남은시간</th></tr></thead><tbody>';
     for(i=0; i<data.length; i++){
@@ -232,7 +235,7 @@ function add_HTMLTAG(data, type){
     return HTML_data;
 }
 
-//적게남은 시간, 과목명, 과제명 순으로 정렬
+/** 적게남은 시간, 과목명, 과제명 순으로 정렬 */
 function sortToDo(thingsToDo){
     thingsToDo.lecture.sort(function(a, b){
         return a["remainingTime_ms"]-b["remainingTime_ms"];
@@ -243,12 +246,12 @@ function sortToDo(thingsToDo){
     return thingsToDo
 }
 
-//시간차 계산
+/** 시간차 계산 */
 function gapTime(now, date){
     return (new Date(date)).getTime() - now.getTime();
 }
 
-//남은시간을 보기좋게 만들기
+/** 남은시간을 보기좋게 만들기 */
 function msToTime(time_ms){
     var time_out = "";
     var minutes = parseInt((time_ms/(1000*60))%60);
@@ -263,25 +266,25 @@ function msToTime(time_ms){
     return time_out;
 }
 
-//마감기한을 보기좋게 만들기
+/** 마감기한을 보기좋게 만들기 */
 function dateToLocaleString(date){
     newdate = new Date(date);
     return addSpace(newdate.getMonth()+1)+"월 "+addSpace(newdate.getDate())+"일("+dayOfWeek(newdate)+") "+newdate.toLocaleTimeString().substring(0,newdate.toLocaleTimeString().length-3);
 }
 
-//요일찾기
+/** 요일찾기 */
 function dayOfWeek(date){
     var week = ['일', '월', '화', '수', '목', '금', '토'];
     return week[date.getDay()];
 }
 
-//보기좋게 하기 위해 (한자리 수)면 앞에 공백 추가, 글꼴 수정한다면, 여기 수정해야함!!
+/!** 보기좋게 하기 위해 (한자리 수)면 앞에 공백 추가, 글꼴 수정한다면, 여기 수정해야함!! */
 function addSpace(num){
     if(num<10) return "&nbsp&nbsp"+num;
     else return num;
 }
 
-//영문자 사이에 언더바(_)가 있으면 자동 줄바꿈이 안됨. 언더바를 공백으로 바꾸자.
+/** 영문자 사이에 언더바(_)가 있으면 자동 줄바꿈이 안됨. 언더바를 공백으로 바꾸자. */
 function replaceUnderbar(str){
     return str.replace(/_/g," ");
 }
