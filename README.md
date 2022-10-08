@@ -54,3 +54,4 @@ https://stackoverflow.com/questions/34950009/chrome-extension-refused-to-load-th
 
 ---- 
 Soojin Lee
+Jaehyeong Wang
