@@ -34,7 +34,7 @@
 툴팁 삭제
 * **0.1.2**
 >2학기 일부 과목을 가져오지 못하는 현상 수정   
-사이드메뉴 - 과목 - 모든과목에서 별표 표시된 과목의 데이터만 가져옴
+사이드메뉴 - 과목 - 모든과목에서 별표 표시된 과목의 데이터만 가져옴.
 
 ## 참고 URL
 * Chrome Extension, Getting Started Tutorial   
@@ -51,3 +51,7 @@ https://brunch.co.kr/@joypinkgom/86
 https://coding-factory.tistory.com/144
 * Stack OverFlow, Chrome Extension “Refused to load the script because it violates the following Content Security Policy directive”   
 https://stackoverflow.com/questions/34950009/chrome-extension-refused-to-load-the-script-because-it-violates-the-following-c
+
+---- 
+Soojin Lee
+Jaehyeong Wang
